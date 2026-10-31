@@ -23,7 +23,12 @@ targets:
     type: application
     platform: macOS
     sources:
-      - App
+      - path: App
+        excludes: [AppIcon.icon]
+      # Icon Composer bundle (Liquid Glass icon); added as one file so actool compiles it.
+      - path: App/AppIcon.icon
+        type: file
+        buildPhase: resources
       # The onboarding renders the real widget, so its views compile into the app too.
       - Widget/WidgetViews.swift
       - Widget/Provider.swift

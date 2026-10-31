@@ -19,7 +19,7 @@ else
 fi
 
 xcodegen generate -q
-rm -rf "$ARCHIVE" "$EXPORT" "$DMG" build/dmg
+rm -rf "$ARCHIVE" "$EXPORT" "$DMG" build/dmgart
 xcodebuild -project Remy.xcodeproj -scheme Remy -configuration Release -archivePath "$ARCHIVE" \
   -clonedSourcePackagesDirPath build/spm -allowProvisioningUpdates archive -quiet
 
@@ -40,10 +40,11 @@ else
   mkdir -p "$EXPORT" && ditto "$ARCHIVE/Products/Applications/Remy.app" "$EXPORT/Remy.app"
 fi
 
-mkdir -p build/dmg
-ditto "$EXPORT/Remy.app" build/dmg/Remy.app
-ln -s /Applications build/dmg/Applications
-hdiutil create -volname Remy -srcfolder build/dmg -fs HFS+ -format UDZO -ov "$DMG" >/dev/null
+# Window art (arrow + hint) at 1x/2x, then a laid-out DMG. dmgbuild writes Finder's view settings directly.
+mkdir -p build/dmgart
+swift scripts/dmg-background.swift build/dmgart
+tiffutil -cathidpicheck build/dmgart/dmg-background.png build/dmgart/dmg-background@2x.png -out build/dmgart/background.tiff >/dev/null
+uvx dmgbuild -s scripts/dmg-settings.py -D app="$EXPORT/Remy.app" -D background=build/dmgart/background.tiff Remy "$DMG" >/dev/null
 
 if [[ -n "${REMY_NOTARY_PROFILE:-}" && "$METHOD" == developer-id ]]; then
   xcrun notarytool submit "$DMG" --keychain-profile "$REMY_NOTARY_PROFILE" --wait

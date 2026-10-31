@@ -15,7 +15,7 @@ Reopen these steps from the menu bar (… → Connect Agents…), or with `open 
 
 ## Build
 
-Requires macOS 26, Xcode 26, and XcodeGen.
+Requires macOS 26, Xcode 26, XcodeGen, and uv (the DMG layout runs `uvx dmgbuild`).
 
 ```sh
 ./scripts/make-dmg.sh          # build/Remy.dmg

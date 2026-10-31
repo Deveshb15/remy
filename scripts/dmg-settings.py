@@ -1,0 +1,19 @@
+# dmgbuild settings (run via scripts/make-dmg.sh). Coordinates match scripts/dmg-background.swift.
+app = defines["app"]
+format = "UDZO"
+filesystem = "HFS+"
+files = [app]
+symlinks = {"Applications": "/Applications"}
+background = defines["background"]
+window_rect = ((240, 220), (600, 380))
+icon_size = 104
+text_size = 13
+icon_locations = {"Remy.app": (170, 170), "Applications": (430, 170)}
+default_view = "icon-view"
+show_status_bar = False
+show_tab_view = False
+show_toolbar = False
+show_pathbar = False
+show_sidebar = False
+show_icon_preview = False
+arrange_by = None
