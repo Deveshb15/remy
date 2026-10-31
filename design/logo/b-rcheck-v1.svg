@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="t">
+  <title id="t">Remy — R-check</title>
+  <!-- Monoline R, 30-unit stroke: stem, bowl r=46, and a leg at 45° that turns up into a check. -->
+  <g fill="none" stroke="#111" stroke-width="30" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M60 52 V204"/>
+    <path d="M60 52 H116 A46 46 0 0 1 116 144 H60"/>
+    <path d="M100 144 L144 188 L196 136"/>
+  </g>
+</svg>

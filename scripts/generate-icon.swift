@@ -1,109 +1,49 @@
 #!/usr/bin/env swift
-// Remy app icon: the filled check disc from the UI (CheckGlyph), on a soft neutral field.
-// Drawn on Apple's macOS icon template (rounded square with transparent margin); no baked shine/shadow.
-// Writes icon-variants/{a,b,c}-{light,dark,tinted}.png at 1024px. Shipped: a-light (see App/Assets.xcassets).
+// Remy app icon ("Peek": Remy peeks up from the bottom edge, googly eyes glancing up, smile, blush).
+// Writes the Icon Composer layer masks (black on transparent, 1024 canvas) into the .icon bundle given as arg 1.
+// Colours live in App/AppIcon.icon/icon.json so light/dark appearances only swap fills. Master: design/logo/final/remy-icon.svg.
 import AppKit
 import CoreGraphics
 
 let S: CGFloat = 1024
-let outDir = URL(fileURLWithPath: CommandLine.arguments.dropFirst().first ?? "icon-variants")
-try? FileManager.default.createDirectory(at: outDir, withIntermediateDirectories: true)
+let iconDir = URL(fileURLWithPath: CommandLine.arguments.dropFirst().first ?? "App/AppIcon.icon")
+let assets = iconDir.appendingPathComponent("Assets")
+try? FileManager.default.createDirectory(at: assets, withIntermediateDirectories: true)
 
-func gray(_ w: CGFloat, _ a: CGFloat = 1) -> CGColor { CGColor(gray: w, alpha: a) }
+/// Coordinates are taken from the 256-unit SVG master (y down) and scaled 4×; CG's y axis points up.
+func p(_ x: CGFloat, _ y: CGFloat) -> CGPoint { CGPoint(x: x * 4, y: S - y * 4) }
 
-struct Palette { let top, bottom, mark, knock: CGColor }
-let palettes: [String: Palette] = [
-    "light": Palette(top: gray(0.99), bottom: gray(0.90), mark: gray(0.11), knock: gray(0.99)),
-    "dark": Palette(top: gray(0.22), bottom: gray(0.10), mark: gray(0.96), knock: gray(0.12)),
-    "tinted": Palette(top: gray(0.30), bottom: gray(0.18), mark: gray(1.0), knock: gray(0.24)),
-]
-
-/// macOS icon template: an 824pt rounded square centered on the 1024 canvas, transparent outside.
-/// Art that matches this shape is shown as-is on macOS 26; anything else gets boxed in a gray "legacy" frame.
-let tile = CGRect(x: 100, y: 100, width: 824, height: 824)
-let tileRadius: CGFloat = 185.4
-
-func background(_ c: CGContext, _ p: Palette) {
-    c.addPath(CGPath(roundedRect: tile, cornerWidth: tileRadius, cornerHeight: tileRadius, transform: nil))
-    c.clip()
-    let g = CGGradient(colorsSpace: CGColorSpace(name: CGColorSpace.genericGrayGamma2_2), colors: [p.top, p.bottom] as CFArray, locations: [0, 1])!
-    c.drawLinearGradient(g, start: CGPoint(x: 0, y: tile.maxY), end: CGPoint(x: 0, y: tile.minY), options: [])
-}
-
-/// Rounded check inside a circle of radius r centered at (cx, cy).
-func check(_ c: CGContext, cx: CGFloat, cy: CGFloat, r: CGFloat, color: CGColor, width: CGFloat) {
-    c.setStrokeColor(color)
-    c.setLineWidth(width)
-    c.setLineCap(.round)
-    c.setLineJoin(.round)
-    c.move(to: CGPoint(x: cx - 0.40 * r, y: cy + 0.02 * r))
-    c.addLine(to: CGPoint(x: cx - 0.12 * r, y: cy - 0.27 * r))
-    c.addLine(to: CGPoint(x: cx + 0.42 * r, y: cy + 0.30 * r))
-    c.strokePath()
-}
-
-// A: solid disc with a knocked-out check (the "done" state from the app).
-func variantA(_ c: CGContext, _ p: Palette) {
-    background(c, p)
-    let r: CGFloat = 205
-    c.setFillColor(p.mark)
-    c.fillEllipse(in: CGRect(x: S / 2 - r, y: S / 2 - r, width: 2 * r, height: 2 * r))
-    check(c, cx: S / 2, cy: S / 2, r: r, color: p.knock, width: 0.17 * r)
-}
-
-// B: open ring with the check drawn through it (the moment of checking off).
-func variantB(_ c: CGContext, _ p: Palette) {
-    background(c, p)
-    let r: CGFloat = 255
-    c.setStrokeColor(p.mark)
-    c.setLineWidth(44)
-    c.strokeEllipse(in: CGRect(x: S / 2 - r, y: S / 2 - r, width: 2 * r, height: 2 * r))
-    check(c, cx: S / 2, cy: S / 2, r: r, color: p.mark, width: 0.19 * r)
-}
-
-// C: a stack of to-do rows, the top one checked (the widget, distilled).
-func variantC(_ c: CGContext, _ p: Palette) {
-    background(c, p)
-    let r: CGFloat = 74, x0: CGFloat = 250, lineX: CGFloat = 380
-    for (i, y) in [650.0, 512.0, 374.0].enumerated() {
-        let cy = CGFloat(y)
-        if i == 0 {
-            c.setFillColor(p.mark)
-            c.fillEllipse(in: CGRect(x: x0 - r, y: cy - r, width: 2 * r, height: 2 * r))
-            check(c, cx: x0, cy: cy, r: r, color: p.knock, width: 0.24 * r)
-        } else {
-            c.setStrokeColor(p.mark.copy(alpha: 0.45)!)
-            c.setLineWidth(18)
-            c.strokeEllipse(in: CGRect(x: x0 - r + 9, y: cy - r + 9, width: 2 * r - 18, height: 2 * r - 18))
-        }
-        c.setFillColor(p.mark.copy(alpha: i == 0 ? 1 : 0.45)!)
-        let w: CGFloat = i == 0 ? 400 : (i == 1 ? 330 : 370)
-        c.addPath(CGPath(roundedRect: CGRect(x: lineX, y: cy - 22, width: w, height: 44), cornerWidth: 22, cornerHeight: 22, transform: nil))
-        c.fillPath()
-    }
-}
-
-let variants: [(String, (CGContext, Palette) -> Void)] = [("a", variantA), ("b", variantB), ("c", variantC)]
-for (name, draw) in variants {
-    for (mode, p) in palettes {
-        let ctx = CGContext(data: nil, width: Int(S), height: Int(S), bitsPerComponent: 8, bytesPerRow: 0,
-                            space: CGColorSpace(name: CGColorSpace.sRGB)!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
-        draw(ctx, p)
-        let rep = NSBitmapImageRep(cgImage: ctx.makeImage()!)
-        try! rep.representation(using: .png, properties: [:])!.write(to: outDir.appendingPathComponent("\(name)-\(mode).png"))
-    }
-}
-// Icon Composer layer: the disc with the check cut out (transparent), on a transparent 1024 canvas.
-// The .icon's background fill shows through the cut, so light/dark only need fill colors swapped.
-do {
+func layer(_ name: String, _ draw: (CGContext) -> Void) {
     let ctx = CGContext(data: nil, width: Int(S), height: Int(S), bitsPerComponent: 8, bytesPerRow: 0,
                         space: CGColorSpace(name: CGColorSpace.sRGB)!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
-    let r: CGFloat = 262
-    ctx.setFillColor(gray(0))
-    ctx.fillEllipse(in: CGRect(x: S / 2 - r, y: S / 2 - r, width: 2 * r, height: 2 * r))
-    ctx.setBlendMode(.clear)
-    check(ctx, cx: S / 2, cy: S / 2, r: r, color: gray(0), width: 0.17 * r)
+    ctx.setFillColor(CGColor(gray: 0, alpha: 1))
+    ctx.setStrokeColor(CGColor(gray: 0, alpha: 1))
+    draw(ctx)
     let rep = NSBitmapImageRep(cgImage: ctx.makeImage()!)
-    try! rep.representation(using: .png, properties: [:])!.write(to: outDir.appendingPathComponent("disc.png"))
+    try! rep.representation(using: .png, properties: [:])!.write(to: assets.appendingPathComponent("\(name).png"))
 }
-print("Wrote variants to \(outDir.path)")
+
+func circle(_ c: CGContext, _ cx: CGFloat, _ cy: CGFloat, _ r: CGFloat) {
+    let o = p(cx, cy)
+    c.fillEllipse(in: CGRect(x: o.x - r * 4, y: o.y - r * 4, width: r * 8, height: r * 8))
+}
+
+// Head: half-disc r=98 centred (128,226), continued to the bottom edge.
+layer("head") { c in
+    c.move(to: p(30, 256)); c.addLine(to: p(30, 226))
+    c.addArc(center: p(128, 226), radius: 98 * 4, startAngle: .pi, endAngle: 0, clockwise: true)
+    c.addLine(to: p(226, 256)); c.closePath(); c.fillPath()
+}
+layer("eyes") { c in circle(c, 106, 182, 19); circle(c, 150, 182, 19) }          // sclera
+layer("pupils") { c in circle(c, 111, 176, 8.9); circle(c, 155, 176, 8.9) }      // glancing up and right
+layer("smile") { c in
+    c.setLineWidth(7 * 4); c.setLineCap(.round)
+    c.move(to: p(114, 214)); c.addQuadCurve(to: p(142, 214), control: p(128, 226)); c.strokePath()
+}
+layer("blush") { c in
+    for x in [72.0, 184.0] {
+        let o = p(x, 206)
+        c.fillEllipse(in: CGRect(x: o.x - 44, y: o.y - 26, width: 88, height: 52))
+    }
+}
+print("Wrote layers to \(assets.path)")

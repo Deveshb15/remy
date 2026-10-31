@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+<defs><clipPath id="t"><rect width="256" height="256" rx="57"/></clipPath></defs>
+<rect width="256" height="256" rx="57" fill="#F4F4F2"/>
+<g clip-path="url(#t)"><path fill="#111" fill-rule="evenodd" d="M84 56 H170 L200 86 V148 A28 28 0 0 1 172 176 H114 L84 206 V176 A28 28 0 0 1 56 148 V84 A28 28 0 0 1 84 56 Z M98 104 A12 12 0 1 0 98 128 A12 12 0 1 0 98 104 Z M124 110 H166 A6 6 0 0 1 166 122 H124 A6 6 0 0 1 124 110 Z"/><path fill="#9A9A96" d="M170 56 V86 H200 Z"/></g>
+</svg>

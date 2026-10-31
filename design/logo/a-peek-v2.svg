@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="t">
+  <title id="t">Remy — Peek</title>
+  <!-- Head: half-disc r=84 centred (128,158) rising over the horizon. Eyes: capsule holes 16×34 (r=8) at x 124 & 160,
+       set right of centre and high: glancing up toward "later". Horizon: 12-unit line, 24-unit gap below the head. -->
+  <path fill="#111" fill-rule="evenodd" d="M44 158 A84 84 0 0 1 212 158 Z
+    M116 106 A8 8 0 0 1 132 106 V124 A8 8 0 0 1 116 124 Z
+    M152 106 A8 8 0 0 1 168 106 V124 A8 8 0 0 1 152 124 Z"/>
+  <rect x="24" y="176" width="208" height="12" rx="6" fill="#111"/>
+</svg>

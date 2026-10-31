@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-labelledby="t">
+  <title id="t">Remy — Peek</title>
+  <!-- Half-disc r=72 centred (128,148) sitting on a baseline: a sun rising / a face peeking over the horizon.
+       Eyes are holes r=11 at (110,112) and (150,112), glancing slightly right (toward "later"). -->
+  <path fill="#111" fill-rule="evenodd" d="M56 148 A72 72 0 0 1 200 148 Z
+    M99 112 A11 11 0 1 0 121 112 A11 11 0 1 0 99 112 Z
+    M139 112 A11 11 0 1 0 161 112 A11 11 0 1 0 139 112 Z"/>
+  <rect x="40" y="164" width="176" height="18" rx="9" fill="#111"/>
+</svg>

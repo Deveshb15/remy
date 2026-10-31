@@ -1,12 +1,12 @@
 {
   "fill" : {
-    "automatic-gradient" : "extended-gray:0.96000,1.00000"
+    "solid" : "srgb:0.95700,0.95300,0.93700,1.00000"
   },
   "fill-specializations" : [
     {
       "appearance" : "dark",
       "value" : {
-        "automatic-gradient" : "extended-gray:0.16000,1.00000"
+        "solid" : "srgb:0.11400,0.11400,0.12500,1.00000"
       }
     }
   ],
@@ -14,29 +14,45 @@
     {
       "layers" : [
         {
-          "fill" : {
-            "solid" : "extended-gray:0.10000,1.00000"
-          },
-          "fill-specializations" : [
-            {
-              "appearance" : "dark",
-              "value" : {
-                "solid" : "extended-gray:0.96000,1.00000"
-              }
-            }
-          ],
-          "image-name" : "disc.png",
-          "name" : "disc"
+          "fill" : { "solid" : "srgb:0.07800,0.07800,0.07800,1.00000" },
+          "fill-specializations" : [ { "appearance" : "dark", "value" : { "solid" : "srgb:1.00000,1.00000,1.00000,1.00000" } } ],
+          "image-name" : "pupils.png",
+          "name" : "pupils"
+        },
+        {
+          "fill" : { "solid" : "srgb:1.00000,1.00000,1.00000,1.00000" },
+          "fill-specializations" : [ { "appearance" : "dark", "value" : { "solid" : "srgb:0.07800,0.07800,0.07800,1.00000" } } ],
+          "image-name" : "eyes.png",
+          "name" : "eyes"
+        },
+        {
+          "fill" : { "solid" : "srgb:1.00000,1.00000,1.00000,1.00000" },
+          "fill-specializations" : [ { "appearance" : "dark", "value" : { "solid" : "srgb:0.07800,0.07800,0.07800,1.00000" } } ],
+          "image-name" : "smile.png",
+          "name" : "smile"
+        },
+        {
+          "fill" : { "solid" : "srgb:0.94900,0.54500,0.43100,1.00000" },
+          "image-name" : "blush.png",
+          "name" : "blush"
         }
       ],
-      "shadow" : {
-        "kind" : "neutral",
-        "opacity" : 0.5
-      },
-      "translucency" : {
-        "enabled" : false,
-        "value" : 0.5
-      }
+      "name" : "face",
+      "shadow" : { "kind" : "neutral", "opacity" : 0.3 },
+      "translucency" : { "enabled" : false, "value" : 0.5 }
+    },
+    {
+      "layers" : [
+        {
+          "fill" : { "solid" : "srgb:0.07800,0.07800,0.07800,1.00000" },
+          "fill-specializations" : [ { "appearance" : "dark", "value" : { "solid" : "srgb:0.95300,0.94500,0.91800,1.00000" } } ],
+          "image-name" : "head.png",
+          "name" : "head"
+        }
+      ],
+      "name" : "remy",
+      "shadow" : { "kind" : "neutral", "opacity" : 0.5 },
+      "translucency" : { "enabled" : false, "value" : 0.5 }
     }
   ],
   "supported-platforms" : {

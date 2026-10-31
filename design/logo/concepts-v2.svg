@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="1074" viewBox="0 0 1600 1074"><defs><filter id="grey"><feColorMatrix type="saturate" values="0"/></filter></defs><rect width="1600" height="1074" fill="#f7f7f4"/><text x="60" y="78" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="40" font-weight="700" fill="#161616">Logo concepts</text><text x="60" y="116" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="20" fill="#6b6b6b">Concepts for review — pick a direction (or tell me what you like in each).</text><rect x="60" y="150" width="474.667" height="864" rx="18" fill="#fff" stroke="#161616" stroke-width="2"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t" viewBox="0 0 256 256" x="90" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title id="c0-t">Remy — Peek</title>
+  <!-- Head: half-disc r=84 centred (128,158) rising over the horizon. Eyes: capsule holes 16×34 (r=8) at x 124 & 160,
+       set right of centre and high: glancing up toward "later". Horizon: 12-unit line, 24-unit gap below the head. -->
+  <path fill="#111" fill-rule="evenodd" d="M44 158 A84 84 0 0 1 212 158 Z
+    M116 106 A8 8 0 0 1 132 106 V124 A8 8 0 0 1 116 124 Z
+    M152 106 A8 8 0 0 1 168 106 V124 A8 8 0 0 1 152 124 Z"/>
+  <rect x="24" y="176" width="208" height="12" rx="6" fill="#111"/>
+</svg>
+</g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="90" y="514" width="414.667" height="210" preserveAspectRatio="xMidYMid meet">
+  <defs><clipPath id="l0-tile"><rect width="256" height="256" rx="57"/></clipPath></defs>
+  <rect width="256" height="256" rx="57" fill="#F4F4F2"/>
+  <g clip-path="url(#l0-tile)">
+    <path fill="#111" fill-rule="evenodd" d="M30 256 V226 A98 98 0 0 1 226 226 V256 Z
+      M122 160 A10 10 0 0 1 142 160 V182 A10 10 0 0 1 122 182 Z
+      M164 160 A10 10 0 0 1 184 160 V182 A10 10 0 0 1 164 182 Z"/>
+  </g>
+</svg>
+</g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t" viewBox="0 0 256 256" x="90" y="750" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title id="s064-t">Remy — Peek</title>
+  <!-- Head: half-disc r=84 centred (128,158) rising over the horizon. Eyes: capsule holes 16×34 (r=8) at x 124 & 160,
+       set right of centre and high: glancing up toward "later". Horizon: 12-unit line, 24-unit gap below the head. -->
+  <path fill="#111" fill-rule="evenodd" d="M44 158 A84 84 0 0 1 212 158 Z
+    M116 106 A8 8 0 0 1 132 106 V124 A8 8 0 0 1 116 124 Z
+    M152 106 A8 8 0 0 1 168 106 V124 A8 8 0 0 1 152 124 Z"/>
+  <rect x="24" y="176" width="208" height="12" rx="6" fill="#111"/>
+</svg>
+</g><text x="122" y="834" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t" viewBox="0 0 256 256" x="180" y="782" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title id="s032-t">Remy — Peek</title>
+  <!-- Head: half-disc r=84 centred (128,158) rising over the horizon. Eyes: capsule holes 16×34 (r=8) at x 124 & 160,
+       set right of centre and high: glancing up toward "later". Horizon: 12-unit line, 24-unit gap below the head. -->
+  <path fill="#111" fill-rule="evenodd" d="M44 158 A84 84 0 0 1 212 158 Z
+    M116 106 A8 8 0 0 1 132 106 V124 A8 8 0 0 1 116 124 Z
+    M152 106 A8 8 0 0 1 168 106 V124 A8 8 0 0 1 152 124 Z"/>
+  <rect x="24" y="176" width="208" height="12" rx="6" fill="#111"/>
+</svg>
+</g><text x="196" y="834" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t" viewBox="0 0 256 256" x="238" y="798" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title id="s016-t">Remy — Peek</title>
+  <!-- Head: half-disc r=84 centred (128,158) rising over the horizon. Eyes: capsule holes 16×34 (r=8) at x 124 & 160,
+       set right of centre and high: glancing up toward "later". Horizon: 12-unit line, 24-unit gap below the head. -->
+  <path fill="#111" fill-rule="evenodd" d="M44 158 A84 84 0 0 1 212 158 Z
+    M116 106 A8 8 0 0 1 132 106 V124 A8 8 0 0 1 116 124 Z
+    M152 106 A8 8 0 0 1 168 106 V124 A8 8 0 0 1 152 124 Z"/>
+  <rect x="24" y="176" width="208" height="12" rx="6" fill="#111"/>
+</svg>
+</g><text x="246" y="834" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="90.0" y="870" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">A · Peek</text><text x="90.0" y="898" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="15" font-weight="700" fill="#161616" letter-spacing="1.5">RECOMMENDED</text><text x="90.0" y="932" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">Remy peeks up over the horizon: things show</text><text x="90.0" y="958" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">up on their day.</text><rect x="562.667" y="150" width="474.667" height="864" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t" viewBox="0 0 256 256" x="592.667" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title id="c1-t">Remy — R-check</title>
+  <!-- Monoline R, 30-unit stroke: stem, bowl r=46, and a leg at 45° that turns up into a check. -->
+  <g fill="none" stroke="#111" stroke-width="30" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M60 52 V204"/>
+    <path d="M60 52 H116 A46 46 0 0 1 116 144 H60"/>
+    <path d="M100 144 L144 188 L196 136"/>
+  </g>
+</svg>
+</g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="592.667" y="514" width="414.667" height="210" preserveAspectRatio="xMidYMid meet">
+  <rect width="256" height="256" rx="57" fill="#F4F4F2"/>
+  <g transform="translate(38 38) scale(0.703)" fill="none" stroke="#111" stroke-width="30" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M60 52 V204"/><path d="M60 52 H116 A46 46 0 0 1 116 144 H60"/><path d="M100 144 L144 188 L196 136"/>
+  </g>
+</svg>
+</g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t" viewBox="0 0 256 256" x="592.667" y="750" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title id="s164-t">Remy — R-check</title>
+  <!-- Monoline R, 30-unit stroke: stem, bowl r=46, and a leg at 45° that turns up into a check. -->
+  <g fill="none" stroke="#111" stroke-width="30" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M60 52 V204"/>
+    <path d="M60 52 H116 A46 46 0 0 1 116 144 H60"/>
+    <path d="M100 144 L144 188 L196 136"/>
+  </g>
+</svg>
+</g><text x="624.667" y="834" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t" viewBox="0 0 256 256" x="682.667" y="782" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title id="s132-t">Remy — R-check</title>
+  <!-- Monoline R, 30-unit stroke: stem, bowl r=46, and a leg at 45° that turns up into a check. -->
+  <g fill="none" stroke="#111" stroke-width="30" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M60 52 V204"/>
+    <path d="M60 52 H116 A46 46 0 0 1 116 144 H60"/>
+    <path d="M100 144 L144 188 L196 136"/>
+  </g>
+</svg>
+</g><text x="698.667" y="834" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t" viewBox="0 0 256 256" x="740.667" y="798" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title id="s116-t">Remy — R-check</title>
+  <!-- Monoline R, 30-unit stroke: stem, bowl r=46, and a leg at 45° that turns up into a check. -->
+  <g fill="none" stroke="#111" stroke-width="30" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M60 52 V204"/>
+    <path d="M60 52 H116 A46 46 0 0 1 116 144 H60"/>
+    <path d="M100 144 L144 188 L196 136"/>
+  </g>
+</svg>
+</g><text x="748.667" y="834" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="592.6666666666667" y="870" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">B · R-check</text><text x="592.6666666666667" y="904" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">A custom R whose leg turns into a check.</text><rect x="1065.33" y="150" width="474.667" height="864" rx="18" fill="#fff" stroke="#e4e4e0" stroke-width="1"/><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t" viewBox="0 0 256 256" x="1095.33" y="190" width="414.667" height="300" preserveAspectRatio="xMidYMid meet">
+  <title id="c2-t">Remy — Day Buddy</title>
+  <!-- Calendar tile (24 stroke, rx 36) whose binder tabs read as ears, with a single smile: a friendly day. -->
+  <rect x="52" y="72" width="152" height="140" rx="36" fill="none" stroke="#111" stroke-width="24"/>
+  <rect x="86" y="40" width="22" height="50" rx="11" fill="#111"/>
+  <rect x="148" y="40" width="22" height="50" rx="11" fill="#111"/>
+  <path d="M98 150 Q128 180 158 150" fill="none" stroke="#111" stroke-width="20" stroke-linecap="round"/>
+</svg>
+</g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" x="1095.33" y="514" width="414.667" height="210" preserveAspectRatio="xMidYMid meet">
+  <rect width="256" height="256" rx="57" fill="#F4F4F2"/>
+  <g transform="translate(38 36) scale(0.703)">
+    <rect x="52" y="72" width="152" height="140" rx="36" fill="none" stroke="#111" stroke-width="24"/>
+    <rect x="86" y="40" width="22" height="50" rx="11" fill="#111"/><rect x="148" y="40" width="22" height="50" rx="11" fill="#111"/>
+    <path d="M98 150 Q128 180 158 150" fill="none" stroke="#111" stroke-width="20" stroke-linecap="round"/>
+  </g>
+</svg>
+</g><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t" viewBox="0 0 256 256" x="1095.33" y="750" width="64" height="64" preserveAspectRatio="xMidYMid meet">
+  <title id="s264-t">Remy — Day Buddy</title>
+  <!-- Calendar tile (24 stroke, rx 36) whose binder tabs read as ears, with a single smile: a friendly day. -->
+  <rect x="52" y="72" width="152" height="140" rx="36" fill="none" stroke="#111" stroke-width="24"/>
+  <rect x="86" y="40" width="22" height="50" rx="11" fill="#111"/>
+  <rect x="148" y="40" width="22" height="50" rx="11" fill="#111"/>
+  <path d="M98 150 Q128 180 158 150" fill="none" stroke="#111" stroke-width="20" stroke-linecap="round"/>
+</svg>
+</g><text x="1127.33" y="834" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">64px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t" viewBox="0 0 256 256" x="1185.33" y="782" width="32" height="32" preserveAspectRatio="xMidYMid meet">
+  <title id="s232-t">Remy — Day Buddy</title>
+  <!-- Calendar tile (24 stroke, rx 36) whose binder tabs read as ears, with a single smile: a friendly day. -->
+  <rect x="52" y="72" width="152" height="140" rx="36" fill="none" stroke="#111" stroke-width="24"/>
+  <rect x="86" y="40" width="22" height="50" rx="11" fill="#111"/>
+  <rect x="148" y="40" width="22" height="50" rx="11" fill="#111"/>
+  <path d="M98 150 Q128 180 158 150" fill="none" stroke="#111" stroke-width="20" stroke-linecap="round"/>
+</svg>
+</g><text x="1201.33" y="834" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">32px</text><g filter="url(#grey)"><svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t" viewBox="0 0 256 256" x="1243.33" y="798" width="16" height="16" preserveAspectRatio="xMidYMid meet">
+  <title id="s216-t">Remy — Day Buddy</title>
+  <!-- Calendar tile (24 stroke, rx 36) whose binder tabs read as ears, with a single smile: a friendly day. -->
+  <rect x="52" y="72" width="152" height="140" rx="36" fill="none" stroke="#111" stroke-width="24"/>
+  <rect x="86" y="40" width="22" height="50" rx="11" fill="#111"/>
+  <rect x="148" y="40" width="22" height="50" rx="11" fill="#111"/>
+  <path d="M98 150 Q128 180 158 150" fill="none" stroke="#111" stroke-width="20" stroke-linecap="round"/>
+</svg>
+</g><text x="1251.33" y="834" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="12" fill="#8a8a8a" text-anchor="middle">16px</text><text x="1095.3333333333335" y="870" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="26" font-weight="700" fill="#161616">C · Day Buddy</text><text x="1095.3333333333335" y="904" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">A calendar with ears and a smile: a</text><text x="1095.3333333333335" y="930" font-family="system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif" font-size="19" fill="#555">friendly day.</text></svg>
