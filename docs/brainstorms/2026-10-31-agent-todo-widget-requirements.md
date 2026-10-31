@@ -3,7 +3,7 @@ date: 2026-10-31
 topic: agent-todo-widget
 ---
 
-# Reagentr: an agent-fed to-do widget for the Mac desktop
+# Remy: an agent-fed to-do widget for the Mac desktop
 
 ## Summary
 
@@ -21,7 +21,7 @@ When working with agents, "remind me to do X in three days" has nowhere good to 
 
 - A1. You: glance at the widget, check items off, add or manage items in the menu bar popover.
 - A2. Agent: any harness that can call an MCP server or run a shell command. It turns natural-language dates into concrete dates and manages to-dos on your behalf.
-- A3. Reagentr app: stores to-dos, schedules their appearance and notifications, and renders the widget and popover.
+- A3. Remy app: stores to-dos, schedules their appearance and notifications, and renders the widget and popover.
 
 ---
 
@@ -136,7 +136,7 @@ When working with agents, "remind me to do X in three days" has nowhere good to 
 
 **Outside this product's identity**
 
-- An agent inbox where agents raise their own requests or approvals. Reagentr holds things you asked to be reminded of.
+- An agent inbox where agents raise their own requests or approvals. Remy holds things you asked to be reminded of.
 - Team or shared to-dos.
 - App Store distribution.
 
@@ -159,7 +159,7 @@ When working with agents, "remind me to do X in three days" has nowhere good to 
 - How the MCP server and CLI reach the app's store (for example, a shared store versus talking to the running app), and what happens when the app isn't running.
 - Storage format and location for to-dos.
 - How timezone changes and travel affect already-scheduled to-dos.
-- Final app name; "Reagentr" is a working name from the project folder.
+- Final app name; "Remy" is a working name from the project folder.
 
 ---
 

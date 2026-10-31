@@ -1,4 +1,4 @@
-name: Reagentr
+name: Remy
 options:
   bundleIdPrefix: dev.devesh
   deploymentTarget:
@@ -13,80 +13,80 @@ settings:
     MARKETING_VERSION: "0.1.0"
     CURRENT_PROJECT_VERSION: "1"
 packages:
-  ReagentrKit:
-    path: Packages/ReagentrKit
+  RemyKit:
+    path: Packages/RemyKit
   MCP:
     url: https://github.com/modelcontextprotocol/swift-sdk.git
     exactVersion: 0.12.1
 targets:
-  Reagentr:
+  Remy:
     type: application
     platform: macOS
     sources: [App]
     info:
       path: App/Info.plist
       properties:
-        CFBundleDisplayName: Reagentr
+        CFBundleDisplayName: Remy
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSUIElement: true
         LSApplicationCategoryType: public.app-category.productivity
-        ReagentrAppGroup: $(TeamIdentifierPrefix)dev.devesh.reagentr
+        RemyAppGroup: $(TeamIdentifierPrefix)dev.devesh.remy
         CFBundleURLTypes:
-          - CFBundleURLName: dev.devesh.reagentr
-            CFBundleURLSchemes: [reagentr]
+          - CFBundleURLName: dev.devesh.remy
+            CFBundleURLSchemes: [remy]
     entitlements:
       path: App/App.entitlements
       properties:
-        com.apple.security.application-groups: [$(TeamIdentifierPrefix)dev.devesh.reagentr]
+        com.apple.security.application-groups: [$(TeamIdentifierPrefix)dev.devesh.remy]
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: dev.devesh.reagentr
-        PRODUCT_NAME: Reagentr
+        PRODUCT_BUNDLE_IDENTIFIER: dev.devesh.remy
+        PRODUCT_NAME: Remy
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     dependencies:
-      - package: ReagentrKit
-      - target: ReagentrWidget
-      - target: ReagentrCLI
+      - package: RemyKit
+      - target: RemyWidget
+      - target: RemyCLI
         embed: true
         copy:
           destination: wrapper
           subpath: Contents/Helpers
-  ReagentrWidget:
+  RemyWidget:
     type: app-extension
     platform: macOS
     sources: [Widget, App/UI/Theme.swift]
     info:
       path: Widget/Info.plist
       properties:
-        CFBundleDisplayName: Reagentr
+        CFBundleDisplayName: Remy
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
-        ReagentrAppGroup: $(TeamIdentifierPrefix)dev.devesh.reagentr
+        RemyAppGroup: $(TeamIdentifierPrefix)dev.devesh.remy
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
     entitlements:
       path: Widget/Widget.entitlements
       properties:
         com.apple.security.app-sandbox: true
-        com.apple.security.application-groups: [$(TeamIdentifierPrefix)dev.devesh.reagentr]
+        com.apple.security.application-groups: [$(TeamIdentifierPrefix)dev.devesh.remy]
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: dev.devesh.reagentr.widget
+        PRODUCT_BUNDLE_IDENTIFIER: dev.devesh.remy.widget
     dependencies:
-      - package: ReagentrKit
-  # Target name differs from the app's beyond case: on case-insensitive APFS, "reagentr" and "Reagentr" share build dirs.
-  ReagentrCLI:
+      - package: RemyKit
+  # Target name differs from the app's beyond case: on case-insensitive APFS, "remy" and "Remy" share build dirs.
+  RemyCLI:
     type: tool
     platform: macOS
     sources: [CLI]
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: dev.devesh.reagentr.cli
-        PRODUCT_NAME: reagentr
-        PRODUCT_MODULE_NAME: ReagentrCLI
+        PRODUCT_BUNDLE_IDENTIFIER: dev.devesh.remy.cli
+        PRODUCT_NAME: remy
+        PRODUCT_MODULE_NAME: RemyCLI
     dependencies:
-      - package: ReagentrKit
+      - package: RemyKit
       - package: MCP
         product: MCP
   # Dev-only: renders the popover and widget views to PNGs (`Snapshots <dir>`). Not shipped.
@@ -105,14 +105,14 @@ targets:
       - Widget/ToggleTodoIntent.swift
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: dev.devesh.reagentr.snapshots
+        PRODUCT_BUNDLE_IDENTIFIER: dev.devesh.remy.snapshots
         PRODUCT_MODULE_NAME: Snapshots
     dependencies:
-      - package: ReagentrKit
+      - package: RemyKit
 schemes:
-  Reagentr:
+  Remy:
     build:
       targets:
-        Reagentr: all
+        Remy: all
     run:
       config: Debug

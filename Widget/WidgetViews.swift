@@ -1,8 +1,8 @@
-import ReagentrKit
+import RemyKit
 import SwiftUI
 import WidgetKit
 
-struct ReagentrWidgetView: View {
+struct RemyWidgetView: View {
     @Environment(\.widgetFamily) private var family
     let entry: DayEntry
 
@@ -21,7 +21,7 @@ struct WidgetBody: View {
             default: ListDay(entry: entry, maxRows: family == .systemLarge ? 9 : 4, showUpcoming: family == .systemLarge)
             }
         }
-        .widgetURL(URL(string: "reagentr://open"))
+        .widgetURL(URL(string: "remy://open"))
     }
 }
 

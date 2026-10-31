@@ -1,5 +1,5 @@
 import Foundation
-import ReagentrKit
+import RemyKit
 
 let args = Array(CommandLine.arguments.dropFirst())
 do {
@@ -18,9 +18,9 @@ do {
         exit(response.ok ? 0 : 1)
     }
 } catch let e as CLI.UsageError {
-    FileHandle.standardError.write(Data("reagentr: \(e.message)\n\nRun `reagentr help` for usage.\n".utf8))
+    FileHandle.standardError.write(Data("remy: \(e.message)\n\nRun `remy help` for usage.\n".utf8))
     exit(64)
 } catch {
-    FileHandle.standardError.write(Data("reagentr: \(error.localizedDescription)\n".utf8))
+    FileHandle.standardError.write(Data("remy: \(error.localizedDescription)\n".utf8))
     exit(1)
 }

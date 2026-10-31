@@ -1,12 +1,12 @@
 import AppKit
 import Foundation
-import ReagentrKit
+import RemyKit
 
 struct AppClientError: LocalizedError {
     let errorDescription: String?
 }
 
-/// Talks to the running Reagentr app over its Unix socket, launching the app if needed.
+/// Talks to the running Remy app over its Unix socket, launching the app if needed.
 enum AppClient {
     static func send(_ request: Request) async throws -> Response {
         let payload = try Wire.encode(request) + Data("\n".utf8)
@@ -16,16 +16,16 @@ enum AppClient {
             try await Task.sleep(for: .milliseconds(200))
             if let data = try? roundTrip(payload) { return try Wire.decode(Response.self, from: data) }
         }
-        throw AppClientError(errorDescription: "Reagentr app isn't responding. Open Reagentr and try again.")
+        throw AppClientError(errorDescription: "Remy app isn't responding. Open Remy and try again.")
     }
 
     private static func launchApp() async throws {
-        // Prefer the app that contains this binary (Contents/Helpers/reagentr), then any installed copy.
+        // Prefer the app that contains this binary (Contents/Helpers/remy), then any installed copy.
         let bundled = URL(fileURLWithPath: CommandLine.arguments[0]).resolvingSymlinksInPath()
             .deletingLastPathComponent().deletingLastPathComponent().deletingLastPathComponent()
         let appURL = bundled.pathExtension == "app" ? bundled
             : NSWorkspace.shared.urlForApplication(withBundleIdentifier: Paths.appBundleID)
-        guard let appURL else { throw AppClientError(errorDescription: "Reagentr app not found. Install Reagentr.app first.") }
+        guard let appURL else { throw AppClientError(errorDescription: "Remy app not found. Install Remy.app first.") }
         let config = NSWorkspace.OpenConfiguration()
         config.activates = false
         _ = try await NSWorkspace.shared.openApplication(at: appURL, configuration: config)

@@ -1,6 +1,6 @@
 import Foundation
 import Testing
-@testable import ReagentrKit
+@testable import RemyKit
 
 @Suite struct CommandHandlerTests {
     let c = cal()

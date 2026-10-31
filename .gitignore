@@ -4,5 +4,5 @@ build/
 DerivedData/
 *.xcodeproj/xcuserdata/
 *.xcodeproj/project.xcworkspace/xcuserdata/
-Reagentr.xcodeproj/
+Remy.xcodeproj/
 .swiftpm/

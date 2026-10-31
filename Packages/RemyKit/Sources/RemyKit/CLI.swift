@@ -1,6 +1,6 @@
 import Foundation
 
-/// Argument parsing and text output for the `reagentr` binary. Lives here so it's unit-testable.
+/// Argument parsing and text output for the `remy` binary. Lives here so it's unit-testable.
 public enum CLI {
     public enum Command: Equatable {
         case request(Request, json: Bool)
@@ -11,18 +11,18 @@ public enum CLI {
     public struct UsageError: Error, Equatable { public let message: String }
 
     public static let usage = """
-    reagentr — add dated to-dos to your Reagentr widget
+    remy — add dated to-dos to your Remy widget
 
     USAGE
-      reagentr add "<title>" [--date YYYY-MM-DD] [--time HH:mm] [--source NAME]
-      reagentr list [today|upcoming|done|all]
-      reagentr done <id>        reagentr undo <id>
-      reagentr edit <id> [--title T] [--date D | --no-date] [--time T | --no-time]
-      reagentr rm <id>
-      reagentr now
-      reagentr mcp              run as a stdio MCP server
+      remy add "<title>" [--date YYYY-MM-DD] [--time HH:mm] [--source NAME]
+      remy list [today|upcoming|done|all]
+      remy done <id>        remy undo <id>
+      remy edit <id> [--title T] [--date D | --no-date] [--time T | --no-time]
+      remy rm <id>
+      remy now
+      remy mcp              run as a stdio MCP server
 
-    Add --json to any command for raw JSON output. Source defaults to $REAGENTR_SOURCE or "cli".
+    Add --json to any command for raw JSON output. Source defaults to $REMY_SOURCE or "cli".
     """
 
     public static func parse(_ args: [String], env: [String: String] = [:]) throws(UsageError) -> Command {
@@ -59,7 +59,7 @@ public enum CLI {
         case "add":
             guard !positional.isEmpty else { throw UsageError(message: "add needs a title") }
             return .request(Request(op: .add, title: positional.joined(separator: " "), date: flags["date"], time: flags["time"],
-                                    source: flags["source"] ?? env["REAGENTR_SOURCE"] ?? "cli"), json: json)
+                                    source: flags["source"] ?? env["REMY_SOURCE"] ?? "cli"), json: json)
         case "list", "ls":
             let view = try positional.first.map { v throws(UsageError) in
                 guard let view = Request.View(rawValue: v) else { throw UsageError(message: "list view must be today, upcoming, done, or all") }

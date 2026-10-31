@@ -2,7 +2,7 @@ import AppKit
 import Observation
 import SwiftUI
 
-/// Menu bar item + popover. AppKit-hosted so the widget (reagentr://open) and notifications can open it programmatically.
+/// Menu bar item + popover. AppKit-hosted so the widget (remy://open) and notifications can open it programmatically.
 @MainActor
 final class StatusItemController: NSObject {
     private let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -16,7 +16,7 @@ final class StatusItemController: NSObject {
         popover.animates = true
         popover.contentViewController = NSHostingController(rootView: PopoverRoot().environment(controller))
         if let button = item.button {
-            button.image = NSImage(systemSymbolName: "checklist", accessibilityDescription: "Reagentr")
+            button.image = NSImage(systemSymbolName: "checklist", accessibilityDescription: "Remy")
             button.imagePosition = .imageLeading
             button.target = self
             button.action = #selector(toggle)

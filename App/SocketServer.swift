@@ -1,6 +1,6 @@
 import Foundation
 import Network
-import ReagentrKit
+import RemyKit
 
 /// Newline-delimited JSON over a Unix domain socket. One request per connection.
 final class SocketServer: Sendable {

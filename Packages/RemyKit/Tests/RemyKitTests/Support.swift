@@ -1,8 +1,8 @@
 import Foundation
-@testable import ReagentrKit
+@testable import RemyKit
 
 func tempStore() -> TodoStore {
-    let dir = FileManager.default.temporaryDirectory.appendingPathComponent("reagentr-tests-\(UUID().uuidString)")
+    let dir = FileManager.default.temporaryDirectory.appendingPathComponent("remy-tests-\(UUID().uuidString)")
     return TodoStore(url: dir.appendingPathComponent("todos.json"))
 }
 

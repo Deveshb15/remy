@@ -74,8 +74,8 @@ public struct TodoStore: Sendable {
 }
 
 public enum Paths {
-    /// App Group identifier, injected via Info.plist (`ReagentrAppGroup`) so the team prefix lives in build settings.
-    public static var appGroup: String? { Bundle.main.object(forInfoDictionaryKey: "ReagentrAppGroup") as? String }
+    /// App Group identifier, injected via Info.plist (`RemyAppGroup`) so the team prefix lives in build settings.
+    public static var appGroup: String? { Bundle.main.object(forInfoDictionaryKey: "RemyAppGroup") as? String }
 
     public static var storeURL: URL? {
         guard let group = appGroup,
@@ -86,9 +86,9 @@ public enum Paths {
     /// Lives outside the group container so the CLI never touches another app's container (avoids the TCC prompt).
     public static var socketURL: URL {
         FileManager.default.homeDirectoryForCurrentUser
-            .appendingPathComponent("Library/Application Support/Reagentr/agent.sock")
+            .appendingPathComponent("Library/Application Support/Remy/agent.sock")
     }
 
-    public static let appBundleID = "dev.devesh.reagentr"
-    public static let widgetKind = "ReagentrWidget"
+    public static let appBundleID = "dev.devesh.remy"
+    public static let widgetKind = "RemyWidget"
 }

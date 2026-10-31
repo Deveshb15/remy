@@ -1,7 +1,7 @@
 import Foundation
 import AppKit
 import Observation
-import ReagentrKit
+import RemyKit
 import SwiftUI
 import WidgetKit
 
@@ -34,7 +34,7 @@ final class AppController {
             server = try SocketServer(path: Paths.socketURL, onFailure: { message in
                 Task { @MainActor in AppController.shared.lastError = message }
             }) { [weak self] request in
-                await self?.perform(request) ?? .failure("unavailable", "Reagentr is shutting down.", now: .unknown)
+                await self?.perform(request) ?? .failure("unavailable", "Remy is shutting down.", now: .unknown)
             }
         } catch {
             lastError = "Agent socket failed to start: \(error.localizedDescription)"

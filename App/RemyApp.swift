@@ -4,7 +4,7 @@ import SwiftUI
 import UserNotifications
 
 @main
-struct ReagentrApp: App {
+struct RemyApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var delegate
     var body: some Scene { Settings { EmptyView() } }
 }
@@ -21,9 +21,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         if SMAppService.mainApp.status == .notRegistered { try? SMAppService.mainApp.register() }
     }
 
-    // reagentr://open from the widget.
+    // remy://open from the widget.
     func application(_ application: NSApplication, open urls: [URL]) {
-        if urls.contains(where: { $0.scheme == "reagentr" }) { statusItem?.show() }
+        if urls.contains(where: { $0.scheme == "remy" }) { statusItem?.show() }
     }
 
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {

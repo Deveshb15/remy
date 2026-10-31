@@ -1,9 +1,9 @@
 import Testing
-@testable import ReagentrKit
+@testable import RemyKit
 
 @Suite struct CLITests {
     @Test func parsesAdd() throws {
-        let c = try CLI.parse(["add", "Renew", "domain", "--date", "2026-11-03", "--time", "17:00"], env: ["REAGENTR_SOURCE": "Codex"])
+        let c = try CLI.parse(["add", "Renew", "domain", "--date", "2026-11-03", "--time", "17:00"], env: ["REMY_SOURCE": "Codex"])
         #expect(c == .request(Request(op: .add, title: "Renew domain", date: "2026-11-03", time: "17:00", source: "Codex"), json: false))
         #expect(try CLI.parse(["add", "x", "--json"]) == .request(Request(op: .add, title: "x", source: "cli"), json: true))
     }

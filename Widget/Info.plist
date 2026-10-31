@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Reagentr</string>
+	<string>Remy</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -25,7 +25,7 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.widgetkit-extension</string>
 	</dict>
-	<key>ReagentrAppGroup</key>
-	<string>$(TeamIdentifierPrefix)dev.devesh.reagentr</string>
+	<key>RemyAppGroup</key>
+	<string>$(TeamIdentifierPrefix)dev.devesh.remy</string>
 </dict>
 </plist>

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Reagentr</string>
+	<string>Remy</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -22,10 +22,10 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>dev.devesh.reagentr</string>
+			<string>dev.devesh.remy</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>reagentr</string>
+				<string>remy</string>
 			</array>
 		</dict>
 	</array>
@@ -35,7 +35,7 @@
 	<string>public.app-category.productivity</string>
 	<key>LSUIElement</key>
 	<true/>
-	<key>ReagentrAppGroup</key>
-	<string>$(TeamIdentifierPrefix)dev.devesh.reagentr</string>
+	<key>RemyAppGroup</key>
+	<string>$(TeamIdentifierPrefix)dev.devesh.remy</string>
 </dict>
 </plist>

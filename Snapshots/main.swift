@@ -1,10 +1,10 @@
 import AppKit
-import ReagentrKit
+import RemyKit
 import SwiftUI
 import WidgetKit
 
 // Renders the real popover and widget views with sample data so design changes can be reviewed as images.
-let out = URL(fileURLWithPath: CommandLine.arguments.dropFirst().first ?? "/tmp/reagentr-shots")
+let out = URL(fileURLWithPath: CommandLine.arguments.dropFirst().first ?? "/tmp/remy-shots")
 try? FileManager.default.createDirectory(at: out, withIntermediateDirectories: true)
 _ = NSApplication.shared
 
@@ -25,7 +25,7 @@ _ = NSApplication.shared
 }
 
 func sampleStore(empty: Bool) -> URL {
-    let url = FileManager.default.temporaryDirectory.appendingPathComponent("reagentr-snap-\(UUID().uuidString)/todos.json")
+    let url = FileManager.default.temporaryDirectory.appendingPathComponent("remy-snap-\(UUID().uuidString)/todos.json")
     let cal = Calendar.autoupdatingCurrent
     let today = LocalDate(Date(), calendar: cal)
     func mk(_ title: String, _ offset: Int?, _ time: String?, _ source: String, done: Bool = false) -> Todo {

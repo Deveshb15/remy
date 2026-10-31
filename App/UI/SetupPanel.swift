@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Copy-paste setup for agents. The CLI path is the binary embedded in this app bundle.
 struct SetupPanel: View {
-    private var cli: String { Bundle.main.bundleURL.appendingPathComponent("Contents/Helpers/reagentr").path }
+    private var cli: String { Bundle.main.bundleURL.appendingPathComponent("Contents/Helpers/remy").path }
 
     var body: some View {
         ScrollView {
@@ -11,11 +11,11 @@ struct SetupPanel: View {
                     .font(.system(size: 12))
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
-                Snippet(title: "Claude Code", code: "claude mcp add --scope user reagentr -- \"\(cli)\" mcp")
-                Snippet(title: "Codex", code: "codex mcp add reagentr -- \"\(cli)\" mcp")
+                Snippet(title: "Claude Code", code: "claude mcp add --scope user remy -- \"\(cli)\" mcp")
+                Snippet(title: "Codex", code: "codex mcp add remy -- \"\(cli)\" mcp")
                 Snippet(title: "Other MCP clients",
-                        code: "{ \"mcpServers\": { \"reagentr\": {\n  \"command\": \"\(cli)\",\n  \"args\": [\"mcp\"] } } }")
-                Snippet(title: "Shell", code: "ln -sf \"\(cli)\" ~/.local/bin/reagentr")
+                        code: "{ \"mcpServers\": { \"remy\": {\n  \"command\": \"\(cli)\",\n  \"args\": [\"mcp\"] } } }")
+                Snippet(title: "Shell", code: "ln -sf \"\(cli)\" ~/.local/bin/remy")
             }
             .padding(.horizontal, 18)
             .padding(.top, 4)

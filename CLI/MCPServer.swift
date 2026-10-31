@@ -1,6 +1,6 @@
 import Foundation
 import MCP
-import ReagentrKit
+import RemyKit
 
 /// stdio MCP server. Each tool call becomes one wire request to the running app.
 enum MCPServer {
@@ -8,7 +8,7 @@ enum MCPServer {
 
     static func run() async throws {
         let client = ClientName()
-        let server = Server(name: "reagentr", version: "0.1.0", capabilities: .init(tools: .init(listChanged: false)))
+        let server = Server(name: "remy", version: "0.1.0", capabilities: .init(tools: .init(listChanged: false)))
 
         await server.withMethodHandler(ListTools.self) { _ in .init(tools: tools) }
         await server.withMethodHandler(CallTool.self) { params in
@@ -23,7 +23,7 @@ enum MCPServer {
                              structuredContent: try? JSONDecoder().decode(Value.self, from: json),
                              isError: !response.ok)
             } catch {
-                return .init(content: [.text("Reagentr is unavailable: \(error.localizedDescription)")], isError: true)
+                return .init(content: [.text("Remy is unavailable: \(error.localizedDescription)")], isError: true)
             }
         }
 
@@ -33,17 +33,17 @@ enum MCPServer {
         await server.waitUntilCompleted()
     }
 
-    static func request(for tool: String, args: [String: Value], source: String) -> ReagentrKit.Request? {
+    static func request(for tool: String, args: [String: Value], source: String) -> RemyKit.Request? {
         let s = { (k: String) in args[k]?.stringValue }
         switch tool {
-        case "add_todo": return ReagentrKit.Request(op: .add, title: s("title"), date: s("date"), time: s("time"), source: source)
-        case "list_todos": return ReagentrKit.Request(op: .list, view: s("view").flatMap(ReagentrKit.Request.View.init) ?? .today)
+        case "add_todo": return RemyKit.Request(op: .add, title: s("title"), date: s("date"), time: s("time"), source: source)
+        case "list_todos": return RemyKit.Request(op: .list, view: s("view").flatMap(RemyKit.Request.View.init) ?? .today)
         case "update_todo":
-            return ReagentrKit.Request(op: .update, id: s("id"), title: s("title"), date: s("date"), time: s("time"),
+            return RemyKit.Request(op: .update, id: s("id"), title: s("title"), date: s("date"), time: s("time"),
                            clearDate: args["clear_date"]?.boolValue, clearTime: args["clear_time"]?.boolValue)
-        case "complete_todo": return ReagentrKit.Request(op: .complete, id: s("id"), done: args["done"]?.boolValue ?? true)
-        case "delete_todo": return ReagentrKit.Request(op: .delete, id: s("id"))
-        case "current_time": return ReagentrKit.Request(op: .now)
+        case "complete_todo": return RemyKit.Request(op: .complete, id: s("id"), done: args["done"]?.boolValue ?? true)
+        case "delete_todo": return RemyKit.Request(op: .delete, id: s("id"))
+        case "current_time": return RemyKit.Request(op: .now)
         default: return nil
         }
     }
@@ -58,13 +58,13 @@ enum MCPServer {
 
     static let tools: [Tool] = [
         Tool(name: "add_todo", title: "Add to-do",
-             description: "Add a to-do to the user's Reagentr desktop widget. Without a date it is due today. A future-dated to-do stays hidden until that day, then appears and notifies (at `time`, or 9:00 AM). After adding, tell the user the returned `human` date so they can catch mistakes.",
+             description: "Add a to-do to the user's Remy desktop widget. Without a date it is due today. A future-dated to-do stays hidden until that day, then appears and notifies (at `time`, or 9:00 AM). After adding, tell the user the returned `human` date so they can catch mistakes.",
              inputSchema: schema(["title": str("What to do, short and specific."),
                                   "date": str(dateHint),
                                   "time": str("Optional 24h local time HH:mm. Requires date.")], required: ["title"])),
         Tool(name: "list_todos", title: "List to-dos",
              description: "List to-dos. view: today (overdue + due today; default), upcoming (future-dated), done, or all. Returns ids for update/complete/delete.",
-             inputSchema: schema(["view": .object(["type": "string", "enum": .array(ReagentrKit.Request.View.allCases.map { .string($0.rawValue) })])]),
+             inputSchema: schema(["view": .object(["type": "string", "enum": .array(RemyKit.Request.View.allCases.map { .string($0.rawValue) })])]),
              annotations: .init(readOnlyHint: true)),
         Tool(name: "update_todo", title: "Edit or reschedule to-do",
              description: "Change a to-do's title, date, or time. Use clear_date to make it due today, clear_time to drop the time.",

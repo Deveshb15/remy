@@ -1,4 +1,4 @@
-# Reagentr visual and motion spec
+# Remy visual and motion spec
 
 Direction: **quiet and monochrome.** The look follows the restraint of Things 3, Amie, Superlist, and Numo on Mobbin: hairline circular checkboxes, regular-weight titles, and metadata in quiet gray. Color appears only when it carries meaning, and the only color is red for overdue. Delight comes from motion and feel, not from color.
 
