@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+  <channel>
+    <title>Remy</title>
+    <link>https://github.com/Deveshb15/remy</link>
+    <description>Remy updates</description>
+    <language>en</language>
+    <!-- ITEMS (newest first; written by scripts/appcast.py) -->
+    <item>
+      <title>Remy 0.1.2</title>
+      <pubDate>Sat, 31 Oct 2026 14:37:51 GMT</pubDate>
+      <sparkle:version>3</sparkle:version>
+      <sparkle:shortVersionString>0.1.2</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>26.0.0</sparkle:minimumSystemVersion>
+      <description><![CDATA[<h3>New</h3>
+<ul>
+<li><b>Automatic updates.</b> Remy now keeps itself up to date. It checks once a day, and you can check any time from <b>… → Check for Updates…</b>. When an update is ready, Remy shows a badge in the Dock and a notification. It never interrupts what you're doing.</li>
+</ul>
+<h3>Note</h3>
+<ul>
+<li>This is the first version with automatic updates. If you're on 0.1.0 or 0.1.1, install this one by hand once; future updates arrive on their own.</li>
+</ul>]]></description>
+      <enclosure url="https://github.com/Deveshb15/remy/releases/download/v0.1.2/Remy.dmg" sparkle:edSignature="SF9ngQAgisx35/Y/DQOZ9M9224zlo4NAtksdzs/+A0MVopJPvzvNNh5BQ9SfNJ2plcfUAV6ryK/1+20HEsTPBw==" length="6495589" type="application/octet-stream"/>
+    </item>
+  </channel>
+</rss>
