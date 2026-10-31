@@ -1,0 +1,98 @@
+name: Reagentr
+options:
+  bundleIdPrefix: dev.devesh
+  deploymentTarget:
+    macOS: "26.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    DEVELOPMENT_TEAM: J84CXH5N6L
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_VERSION: "6.0"
+    ENABLE_HARDENED_RUNTIME: YES
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+packages:
+  ReagentrKit:
+    path: Packages/ReagentrKit
+  MCP:
+    url: https://github.com/modelcontextprotocol/swift-sdk.git
+    exactVersion: 0.12.1
+targets:
+  Reagentr:
+    type: application
+    platform: macOS
+    sources: [App]
+    info:
+      path: App/Info.plist
+      properties:
+        CFBundleDisplayName: Reagentr
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSUIElement: true
+        LSApplicationCategoryType: public.app-category.productivity
+        ReagentrAppGroup: $(TeamIdentifierPrefix)dev.devesh.reagentr
+        CFBundleURLTypes:
+          - CFBundleURLName: dev.devesh.reagentr
+            CFBundleURLSchemes: [reagentr]
+    entitlements:
+      path: App/App.entitlements
+      properties:
+        com.apple.security.application-groups: [$(TeamIdentifierPrefix)dev.devesh.reagentr]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.devesh.reagentr
+        PRODUCT_NAME: Reagentr
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    dependencies:
+      - package: ReagentrKit
+      - target: ReagentrWidget
+      - target: ReagentrCLI
+        embed: true
+        copy:
+          destination: wrapper
+          subpath: Contents/Helpers
+  ReagentrWidget:
+    type: app-extension
+    platform: macOS
+    sources: [Widget, App/UI/Theme.swift]
+    info:
+      path: Widget/Info.plist
+      properties:
+        CFBundleDisplayName: Reagentr
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        ReagentrAppGroup: $(TeamIdentifierPrefix)dev.devesh.reagentr
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: Widget/Widget.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.application-groups: [$(TeamIdentifierPrefix)dev.devesh.reagentr]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.devesh.reagentr.widget
+    dependencies:
+      - package: ReagentrKit
+  # Target name differs from the app's beyond case: on case-insensitive APFS, "reagentr" and "Reagentr" share build dirs.
+  ReagentrCLI:
+    type: tool
+    platform: macOS
+    sources: [CLI]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.devesh.reagentr.cli
+        PRODUCT_NAME: reagentr
+        PRODUCT_MODULE_NAME: ReagentrCLI
+    dependencies:
+      - package: ReagentrKit
+      - package: MCP
+        product: MCP
+schemes:
+  Reagentr:
+    build:
+      targets:
+        Reagentr: all
+    run:
+      config: Debug
