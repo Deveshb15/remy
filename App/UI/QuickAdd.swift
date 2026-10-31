@@ -1,15 +1,14 @@
 import ReagentrKit
 import SwiftUI
 
-/// Title field + date chips (Today, Tomorrow, Next week, Pick a date) + optional time.
+/// Inline add row. Date options appear only while you type, then tuck away.
 struct QuickAdd: View {
     @Environment(AppController.self) private var app
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @Namespace private var chipNS
 
     enum Choice: Hashable { case today, tomorrow, nextWeek, pick }
 
-    @State private var title = ""
+    @State private var title: String
     @State private var choice: Choice = .today
     @State private var picked = Date.now
     @State private var showPicker = false
@@ -18,7 +17,11 @@ struct QuickAdd: View {
     @State private var shake = 0
     @FocusState private var focused: Bool
 
+    init(title: String = "") { _title = State(initialValue: title) }
+
     private var cal: Calendar { .autoupdatingCurrent }
+    private var hasText: Bool { !title.trimmingCharacters(in: .whitespaces).isEmpty }
+    private var expanded: Bool { hasText }
 
     private var day: LocalDate {
         switch choice {
@@ -31,91 +34,85 @@ struct QuickAdd: View {
 
     var body: some View {
         let still = reduceMotion // captured for Sendable animation closures
-        return VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 8) {
+        return VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 9) {
                 Image(systemName: "plus")
-                    .font(.system(size: 13, weight: .bold))
-                    .foregroundStyle(focused ? Theme.accent : .secondary)
-                TextField("Add a to-do", text: $title)
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(focused ? .secondary : .tertiary)
+                    .frame(width: 16, height: 16)
+                    .padding(5)
+                TextField("New to-do", text: $title)
                     .textFieldStyle(.plain)
-                    .font(.system(size: 14, weight: .medium))
+                    .font(.system(size: 13))
                     .focused($focused)
                     .onSubmit(submit)
-                Button(action: submit) {
-                    Image(systemName: "arrow.up.circle.fill")
-                        .font(.system(size: 20))
-                        .foregroundStyle(title.trimmingCharacters(in: .whitespaces).isEmpty ? Color.secondary.opacity(0.4) : Theme.accent)
+                if hasText {
+                    Text("↩")
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(.tertiary)
+                        .transition(.opacity)
                 }
-                .buttonStyle(PressableStyle())
-                .keyboardShortcut(.return, modifiers: [])
-                .disabled(title.trimmingCharacters(in: .whitespaces).isEmpty)
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 8)
-            .background(Color.primary.opacity(0.05), in: .rect(cornerRadius: 12, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .strokeBorder(focused ? Theme.accent.opacity(0.6) : Color.primary.opacity(0.06), lineWidth: 1)
-            }
+            .padding(.leading, 3)
+            .padding(.trailing, 10)
+            .frame(minHeight: 30)
             .keyframeAnimator(initialValue: 0.0, trigger: shake) { view, x in view.offset(x: still ? 0 : x) } keyframes: { _ in
-                SpringKeyframe(-6, duration: 0.06); SpringKeyframe(5, duration: 0.08); SpringKeyframe(0, duration: 0.2, spring: .bouncy)
+                SpringKeyframe(-5, duration: 0.06); SpringKeyframe(4, duration: 0.08); SpringKeyframe(0, duration: 0.2, spring: .bouncy)
             }
 
-            HStack(spacing: 4) {
-                chip(.today, "Today")
-                chip(.tomorrow, "Tomorrow")
-                chip(.nextWeek, "Next week")
-                chip(.pick, choice == .pick ? Schedule.human(date: day, time: nil, today: app.today, calendar: cal) : "Pick a date", icon: "calendar")
-                    .popover(isPresented: $showPicker, arrowEdge: .bottom) {
-                        DatePicker("Date", selection: $picked, in: Date.now..., displayedComponents: .date)
-                            .datePickerStyle(.graphical)
+            if expanded {
+                HStack(spacing: 2) {
+                    option(.today, "Today")
+                    option(.tomorrow, "Tomorrow")
+                    option(.nextWeek, "Next week")
+                    option(.pick, choice == .pick ? Schedule.human(date: day, time: nil, today: app.today, calendar: cal) : "Date…")
+                        .popover(isPresented: $showPicker, arrowEdge: .bottom) {
+                            DatePicker("Date", selection: $picked, in: Date.now..., displayedComponents: .date)
+                                .datePickerStyle(.graphical)
+                                .labelsHidden()
+                                .padding(8)
+                        }
+                    Spacer(minLength: 4)
+                    if useTime {
+                        DatePicker("Time", selection: $time, displayedComponents: .hourAndMinute)
+                            .datePickerStyle(.stepperField)
                             .labelsHidden()
-                            .padding(10)
+                            .controlSize(.small)
+                            .transition(.opacity.combined(with: .scale(scale: 0.9, anchor: .trailing)))
                     }
-                Spacer(minLength: 0)
-                Button {
-                    withAnimation(Theme.Motion.named(Theme.Motion.pop, reduceMotion: reduceMotion)) { useTime.toggle() }
-                } label: {
-                    Image(systemName: useTime ? "clock.fill" : "clock")
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(useTime ? Theme.accent : .secondary)
-                        .frame(width: 24, height: 22)
-                        .contentTransition(.symbolEffect(.replace))
+                    Button {
+                        withAnimation(Theme.Motion.named(Theme.Motion.pop, reduceMotion: reduceMotion)) { useTime.toggle() }
+                    } label: {
+                        Image(systemName: "clock")
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundStyle(useTime ? .primary : .tertiary)
+                            .frame(width: 22, height: 20)
+                            .contentShape(.rect)
+                    }
+                    .buttonStyle(PressableStyle())
+                    .help(useTime ? "Remove time" : "Add a time")
                 }
-                .buttonStyle(PressableStyle())
-                .help(useTime ? "Remove time" : "Add a time")
-            }
-            if useTime {
-                DatePicker("Time", selection: $time, displayedComponents: .hourAndMinute)
-                    .datePickerStyle(.field)
-                    .font(.system(size: 12, weight: .medium))
-                    .transition(.scale(scale: 0.9, anchor: .topTrailing).combined(with: .opacity))
+                .padding(.leading, 31) // first option text lines up with the title text
+                .padding(.trailing, 6)
+                .transition(.opacity.combined(with: .move(edge: .top)))
             }
         }
+        .animation(Theme.Motion.named(Theme.Motion.bouncy, reduceMotion: reduceMotion), value: expanded)
     }
 
-    private func chip(_ c: Choice, _ label: String, icon: String? = nil) -> some View {
+    private func option(_ c: Choice, _ label: String) -> some View {
         let selected = choice == c
         return Button {
             withAnimation(Theme.Motion.named(Theme.Motion.pop, reduceMotion: reduceMotion)) { choice = c }
             if c == .pick { showPicker = true }
         } label: {
-            HStack(spacing: 3) {
-                if let icon { Image(systemName: icon).font(.system(size: 10, weight: .semibold)) }
-                Text(label).lineLimit(1)
-            }
-            .font(.system(size: 11, weight: .semibold))
-            .foregroundStyle(selected ? .white : .secondary)
-            .padding(.leading, icon == nil ? 8 : 4) // icon side padding = vertical padding (badge rule)
-            .padding(.trailing, 8)
-            .padding(.vertical, 4)
-            .background {
-                if selected {
-                    Capsule().fill(Theme.accent).matchedGeometryEffect(id: "chip", in: chipNS)
-                } else {
-                    Capsule().fill(Color.primary.opacity(0.06))
-                }
-            }
+            Text(label)
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(selected ? .primary : .tertiary)
+                .padding(.horizontal, 7)
+                .padding(.vertical, 3)
+                .background(.primary.opacity(selected ? 0.07 : 0), in: .capsule)
+                .contentShape(.capsule)
         }
         .buttonStyle(PressableStyle())
     }
@@ -129,7 +126,8 @@ struct QuickAdd: View {
         }
         if response.ok {
             title = ""
-            withAnimation(Theme.Motion.named(Theme.Motion.pop, reduceMotion: reduceMotion)) { choice = .today; useTime = false }
+            choice = .today
+            useTime = false
         } else {
             shake += 1
         }

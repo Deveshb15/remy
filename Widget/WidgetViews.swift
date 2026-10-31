@@ -6,67 +6,65 @@ struct ReagentrWidgetView: View {
     @Environment(\.widgetFamily) private var family
     let entry: DayEntry
 
-    private var maxRows: Int { family == .systemLarge ? 9 : 4 }
+    var body: some View { WidgetBody(entry: entry, family: family) }
+}
+
+/// Family passed explicitly so the snapshot tool can render each size.
+struct WidgetBody: View {
+    let entry: DayEntry
+    let family: WidgetFamily
 
     var body: some View {
         Group {
-            if entry.items.isEmpty {
-                EmptyDay(entry: entry, compact: family == .systemSmall)
-            } else if family == .systemSmall {
-                SmallDay(entry: entry)
-            } else {
-                ListDay(entry: entry, maxRows: maxRows, showFooter: family == .systemLarge)
+            switch family {
+            case .systemSmall: SmallDay(entry: entry)
+            default: ListDay(entry: entry, maxRows: family == .systemLarge ? 9 : 4, showUpcoming: family == .systemLarge)
             }
         }
-        .fontDesign(.rounded)
         .widgetURL(URL(string: "reagentr://open"))
     }
 }
 
-/// Header: "Today" + open count + upcoming hint.
+/// "Today 3" on the left, "Sat 31" on the right.
 private struct Header: View {
     let entry: DayEntry
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 6) {
-            Text("Today").font(.system(size: 13, weight: .semibold))
-            Text(entry.items.count, format: .number)
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundStyle(.white)
-                .padding(.horizontal, 6).padding(.vertical, 1)
-                .background(Theme.accent, in: .capsule)
-                .contentTransition(.numericText())
-                .widgetAccentable()
-            Spacer(minLength: 4)
-            if !entry.upcoming.isEmpty {
-                Text("\(entry.upcoming.count) upcoming")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(.secondary)
+        HStack(alignment: .firstTextBaseline, spacing: 5) {
+            Text("Today")
+                .font(.system(size: 13, weight: .semibold))
+            if !entry.items.isEmpty {
+                Text(entry.items.count, format: .number)
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(.tertiary)
                     .contentTransition(.numericText())
             }
+            Spacer(minLength: 4)
+            Text(entry.date, format: .dateTime.weekday(.abbreviated).day())
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(.tertiary)
         }
     }
 }
 
 struct TodoToggle: View {
     let todo: Todo
-    var size: CGFloat = 18
+    var size: CGFloat = 15
 
     var body: some View {
         Toggle(isOn: todo.isDone, intent: ToggleTodoIntent(id: todo.id)) { EmptyView() }
-            .toggleStyle(CheckToggleStyle(tint: Theme.source(todo.source).color, size: size))
+            .toggleStyle(CheckToggleStyle(size: size))
             .accessibilityLabel(todo.isDone ? "Mark \(todo.title) not done" : "Mark \(todo.title) done")
     }
 }
 
 struct CheckToggleStyle: ToggleStyle {
-    let tint: Color
     let size: CGFloat
 
     func makeBody(configuration: Configuration) -> some View {
         Button { configuration.isOn.toggle() } label: {
-            CheckGlyph(isOn: configuration.isOn, tint: tint, size: size)
-                .padding(3) // larger hit target than the glyph
+            CheckGlyph(isOn: configuration.isOn, size: size)
+                .padding(4) // hit target larger than the glyph
                 .contentShape(.rect)
         }
         .buttonStyle(.plain)
@@ -76,19 +74,20 @@ struct CheckToggleStyle: ToggleStyle {
 private struct Row: View {
     let todo: Todo
     let entry: DayEntry
-    let lineLimit: Int
+    var dimmed = false
 
     var body: some View {
-        let overdue = Schedule.bucket(todo, on: entry.today) == .overdue
         HStack(spacing: 6) {
             TodoToggle(todo: todo)
             Text(todo.title)
-                .font(.system(size: 13, weight: .medium))
-                .lineLimit(lineLimit)
+                .font(.system(size: 12.5, weight: .regular))
+                .foregroundStyle(dimmed ? .secondary : .primary)
+                .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            if let chip = entry.chip(todo) { DateChip(text: chip, overdue: overdue) }
-            SourceMark(source: todo.source)
+            RowMeta(text: dimmed ? todo.date?.start(in: entry.calendar).formatted(.dateTime.weekday(.abbreviated)) : entry.chip(todo),
+                    overdue: Schedule.bucket(todo, on: entry.today) == .overdue, source: todo.source)
         }
+        .padding(.leading, -4) // align the ring (not its hit padding) with the header text
         .transition(.push(from: .bottom))
     }
 }
@@ -96,27 +95,48 @@ private struct Row: View {
 private struct ListDay: View {
     let entry: DayEntry
     let maxRows: Int
-    let showFooter: Bool
+    var showUpcoming = false
 
     var body: some View {
         let shown = Array(entry.items.prefix(maxRows))
         let hidden = entry.items.count - shown.count
-        VStack(alignment: .leading, spacing: 6) {
+        // Large widget: spare rows preview what's coming, dimmed, under a quiet label.
+        let spare = showUpcoming ? max(0, maxRows - shown.count - 1) : 0
+        let soon = Array(entry.upcoming.prefix(spare))
+        VStack(alignment: .leading, spacing: 0) {
             Header(entry: entry)
-                .padding(.bottom, 2)
-            ForEach(shown) { todo in
-                Row(todo: todo, entry: entry, lineLimit: showFooter ? 2 : 1)
-            }
-            Spacer(minLength: 0)
-            if hidden > 0 || (showFooter && !entry.upcoming.isEmpty) {
-                HStack {
-                    if hidden > 0 { Text("+\(hidden) more") }
-                    Spacer()
-                    if showFooter, let next = entry.nextUpcomingHuman { Text("Next: \(next)") }
+                .padding(.bottom, 6)
+            if shown.isEmpty {
+                Clear(entry: entry)
+            } else {
+                VStack(alignment: .leading, spacing: 1) {
+                    ForEach(shown) { Row(todo: $0, entry: entry) }
+                    if !soon.isEmpty {
+                        Text("Upcoming")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundStyle(.tertiary)
+                            .padding(.top, 10)
+                            .padding(.bottom, 3)
+                        ForEach(soon) { Row(todo: $0, entry: entry, dimmed: true) }
+                    }
                 }
-                .font(.system(size: 11, weight: .medium))
-                .foregroundStyle(.secondary)
+                Spacer(minLength: 0)
+                Footer(hidden: hidden, upcoming: entry.upcoming.count - soon.count)
             }
+        }
+    }
+}
+
+private struct Footer: View {
+    let hidden: Int
+    let upcoming: Int
+
+    var body: some View {
+        let parts = [hidden > 0 ? "\(hidden) more" : nil, upcoming > 0 ? "\(upcoming) upcoming" : nil].compactMap { $0 }
+        if !parts.isEmpty {
+            Text(parts.joined(separator: " · "))
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(.tertiary)
         }
     }
 }
@@ -125,61 +145,53 @@ private struct SmallDay: View {
     let entry: DayEntry
 
     var body: some View {
-        let next = entry.items[0]
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 0) {
             Text(entry.date, format: .dateTime.weekday(.wide))
-                .font(.system(size: 11, weight: .medium))
+                .font(.system(size: 11, weight: .semibold))
                 .foregroundStyle(.secondary)
             Text(entry.items.count, format: .number)
-                .font(.system(size: 34, weight: .semibold))
-                .tracking(-0.5)
-                .foregroundStyle(Theme.accent)
+                .font(.system(size: 40, weight: .semibold, design: .rounded))
+                .tracking(-1)
                 .contentTransition(.numericText())
-                .widgetAccentable()
-            Spacer(minLength: 0)
-            Text(next.title)
-                .font(.system(size: 13, weight: .medium))
-                .lineLimit(2)
-            HStack(spacing: 4) {
-                if let chip = entry.chip(next) {
-                    DateChip(text: chip, overdue: Schedule.bucket(next, on: entry.today) == .overdue)
+            Text(entry.items.count == 1 ? "to-do today" : "to-dos today")
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(.tertiary)
+            Spacer(minLength: 6)
+            if let next = entry.items.first {
+                HStack(alignment: .top, spacing: 5) {
+                    TodoToggle(todo: next, size: 14)
+                        .padding(.leading, -4)
+                        .padding(.top, -3)
+                    Text(next.title)
+                        .font(.system(size: 12, weight: .regular))
+                        .lineLimit(2)
                 }
-                SourceMark(source: next.source)
-                Spacer(minLength: 0)
-                TodoToggle(todo: next, size: 20)
+            } else {
+                Text(entry.nextUpcomingDay.map { "Next: \($0.formatted(.dateTime.weekday(.abbreviated).month(.abbreviated).day()))" } ?? "All clear")
+                    .font(.system(size: 12, weight: .regular))
+                    .foregroundStyle(.secondary)
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 }
 
-private struct EmptyDay: View {
+private struct Clear: View {
     let entry: DayEntry
-    let compact: Bool
 
     var body: some View {
-        VStack(spacing: compact ? 6 : 8) {
-            Image(systemName: "sun.max.fill")
-                .font(.system(size: compact ? 30 : 36, weight: .semibold))
-                .foregroundStyle(LinearGradient(colors: [Theme.marigold, Theme.accent], startPoint: .top, endPoint: .bottom))
-                .symbolRenderingMode(.hierarchical)
-                .widgetAccentable()
-            Text("All clear.")
+        VStack(alignment: .leading, spacing: 3) {
+            Spacer(minLength: 0)
+            Image(systemName: "checkmark.circle")
+                .font(.system(size: 20, weight: .light))
+                .foregroundStyle(.tertiary)
+                .padding(.bottom, 4)
+            Text("All clear")
                 .font(.system(size: 13, weight: .semibold))
-            if let next = entry.nextUpcomingHuman {
-                Text("Next: \(next).")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(.secondary)
-            } else if !compact {
-                Text("Nothing due today.")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(.secondary)
-            }
+            Text(entry.nextUpcomingDay.map { "Next up \($0.formatted(.dateTime.weekday(.wide).month(.abbreviated).day()))." } ?? "Nothing due today.")
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(.tertiary)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
     }
 }
-
-#Preview("Medium", as: .systemMedium) { ReagentrWidget() } timeline: { DayEntry.sample; DayEntry.empty }
-#Preview("Large", as: .systemLarge) { ReagentrWidget() } timeline: { DayEntry.sample; DayEntry.empty }
-#Preview("Small", as: .systemSmall) { ReagentrWidget() } timeline: { DayEntry.sample; DayEntry.empty }

@@ -8,7 +8,7 @@ import WidgetKit
 /// Single owner of writes from agents and the popover. Reloads the widget and reconciles notifications after changes.
 @MainActor @Observable
 final class AppController {
-    static let shared = AppController()
+    static let shared = AppController(storeURL: Paths.storeURL)
 
     private(set) var todos: [Todo] = []
     private(set) var today = LocalDate(Date(), calendar: .autoupdatingCurrent)
@@ -19,8 +19,8 @@ final class AppController {
     @ObservationIgnored private var watcher: StoreWatcher?
     @ObservationIgnored private let notifications = NotificationReconciler()
 
-    private init() {
-        handler = Paths.storeURL.map { CommandHandler(store: TodoStore(url: $0), calendar: .autoupdatingCurrent) }
+    init(storeURL: URL?) {
+        handler = storeURL.map { CommandHandler(store: TodoStore(url: $0), calendar: .autoupdatingCurrent) }
         if handler == nil { lastError = "App Group container unavailable — check signing and entitlements." }
     }
 
@@ -68,7 +68,7 @@ final class AppController {
         if todos != before { notifications.reconcile(todos) }
     }
 
-    private func reload() {
+    func reload() {
         today = LocalDate(Date(), calendar: .autoupdatingCurrent)
         do {
             let fresh = try handler?.store.load() ?? []

@@ -5,7 +5,7 @@ import UserNotifications
 /// Makes pending notifications match the store: one per incomplete dated to-do, at its time or 9:00.
 @MainActor
 final class NotificationReconciler {
-    private let center = UNUserNotificationCenter.current()
+    private var center: UNUserNotificationCenter { .current() } // lazy: touching it outside an app bundle throws
     private static let prefix = "todo-"
     private var last: Task<Void, Never>?
 

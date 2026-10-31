@@ -1,14 +1,15 @@
 import ReagentrKit
 import SwiftUI
 
-/// A to-do row with the check-off choreography from docs/design/visual-spec.md.
+/// A to-do row. Checking off: the disc fills with a spring, a ripple leaves the checkbox,
+/// the strike draws through the title, then the row leaves. Clicking again before it leaves undoes it.
 struct TodoRow: View {
     @Environment(AppController.self) private var app
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     let todo: Todo
 
-    @State private var checked: Bool?          // optimistic local state during the celebration window
-    @State private var burst = 0
+    @State private var checked: Bool?          // optimistic state during the leave delay
+    @State private var ripple = 0
     @State private var pending: Task<Void, Never>?
     @State private var editing = false
     @State private var draft = ""
@@ -16,40 +17,38 @@ struct TodoRow: View {
     @FocusState private var focused: Bool
 
     private var isOn: Bool { checked ?? todo.isDone }
-    private var source: Theme.Source { Theme.source(todo.source) }
 
     var body: some View {
         let still = reduceMotion // captured for Sendable animation closures
-        return HStack(spacing: 8) {
+        return HStack(spacing: 9) {
             Button(action: toggle) {
-                CheckGlyph(isOn: isOn, tint: source.color)
-                    .keyframeAnimator(initialValue: 1.0, trigger: burst) { view, scale in
+                CheckGlyph(isOn: isOn)
+                    .keyframeAnimator(initialValue: 1.0, trigger: ripple) { view, scale in
                         view.scaleEffect(still ? 1 : scale)
                     } keyframes: { _ in
-                        SpringKeyframe(0.82, duration: 0.08)
-                        SpringKeyframe(1.18, duration: 0.14, spring: .snappy)
-                        SpringKeyframe(1.0, duration: 0.3, spring: .bouncy)
+                        SpringKeyframe(0.8, duration: 0.07)
+                        SpringKeyframe(1.0, duration: 0.35, spring: .bouncy)
                     }
-                    .overlay { Celebration(trigger: burst, tint: source.color) }
-                    .padding(4)
+                    .background { Ripple(trigger: ripple) }
+                    .padding(5)
+                    .contentShape(.rect)
             }
-            .buttonStyle(PressableStyle())
-            .sensoryFeedback(.success, trigger: burst)
+            .buttonStyle(.plain)
+            .sensoryFeedback(.success, trigger: ripple)
             .accessibilityLabel(isOn ? "Mark not done" : "Mark done")
 
             titleView
 
-            if let chip = Schedule.chip(todo, today: app.today, calendar: .autoupdatingCurrent) {
-                DateChip(text: chip, overdue: Schedule.bucket(todo, on: app.today) == .overdue)
-            }
-            SourceMark(source: todo.source)
-                .help("Added by \(source.label)")
+            RowMeta(text: Schedule.chip(todo, today: app.today, calendar: .autoupdatingCurrent),
+                    overdue: Schedule.bucket(todo, on: app.today) == .overdue,
+                    source: todo.source)
         }
-        .padding(.horizontal, 4)
-        .padding(.vertical, 2)
-        .frame(minHeight: 32)
-        .background(Color.primary.opacity(hovering ? 0.05 : 0), in: .rect(cornerRadius: 10))
+        .padding(.leading, 3)
+        .padding(.trailing, 10)
+        .frame(minHeight: 30)
+        .background(.primary.opacity(hovering ? 0.045 : 0), in: .rect(cornerRadius: 8, style: .continuous))
         .onHover { hovering = $0 }
+        .animation(.easeOut(duration: 0.12), value: hovering)
         .contextMenu { menu }
     }
 
@@ -57,20 +56,21 @@ struct TodoRow: View {
         if editing {
             TextField("Title", text: $draft)
                 .textFieldStyle(.plain)
-                .font(.system(size: 13, weight: .medium))
+                .font(.system(size: 13))
                 .focused($focused)
                 .onSubmit(commitEdit)
                 .onExitCommand { editing = false }
                 .onAppear { focused = true }
         } else {
             Text(todo.title)
-                .font(.system(size: 13, weight: .medium))
-                .foregroundStyle(isOn ? .secondary : .primary)
+                .font(.system(size: 13))
+                .foregroundStyle(isOn ? .tertiary : .primary)
                 .lineLimit(2)
+                .overlay(alignment: .leading) { Strike(on: isOn, reduceMotion: reduceMotion) } // spans the text, not the row
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .overlay(alignment: .leading) { Strike(on: isOn, reduceMotion: reduceMotion) }
                 .contentShape(.rect)
                 .onTapGesture(count: 2) { draft = todo.title; editing = true }
+                .animation(.easeOut(duration: 0.2), value: isOn)
         }
     }
 
@@ -84,6 +84,10 @@ struct TodoRow: View {
             Divider()
             Button("No Date") { animate { app.perform(Request(op: .update, id: todo.id, clearDate: true)) } }
         }
+        if Theme.symbol(for: todo.source) != nil {
+            Divider()
+            Text("Added by \(Theme.label(for: todo.source))")
+        }
         Divider()
         Button("Delete", role: .destructive) { animate { app.perform(Request(op: .delete, id: todo.id)) } }
     }
@@ -93,10 +97,10 @@ struct TodoRow: View {
         withAnimation(Theme.Motion.named(Theme.Motion.pop, reduceMotion: reduceMotion)) { checked = next }
         pending?.cancel()
         if next {
-            burst += 1
-            // Commit after the celebration; clicking again inside the window cancels it (interruptible).
+            ripple += 1
+            // Commit after the moment lands; clicking again inside the window cancels it (interruptible).
             pending = Task {
-                try? await Task.sleep(for: .milliseconds(reduceMotion ? 150 : 700))
+                try? await Task.sleep(for: .milliseconds(reduceMotion ? 150 : 650))
                 guard !Task.isCancelled else { return }
                 animate { app.perform(Request(op: .complete, id: todo.id, done: true)) }
                 checked = nil
@@ -131,12 +135,12 @@ private struct Strike: View {
 
     var body: some View {
         GeometryReader { geo in
-            Capsule()
-                .fill(.secondary)
-                .frame(width: geo.size.width, height: 1.5)
+            Rectangle()
+                .fill(.tertiary)
+                .frame(width: geo.size.width, height: 1)
                 .scaleEffect(x: on ? 1 : 0, anchor: .leading)
                 .frame(maxHeight: .infinity)
-                .animation(reduceMotion ? nil : .easeOut(duration: 0.28).delay(0.06), value: on)
+                .animation(reduceMotion ? nil : .easeOut(duration: 0.3).delay(0.05), value: on)
         }
         .allowsHitTesting(false)
     }

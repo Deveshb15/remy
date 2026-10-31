@@ -6,21 +6,20 @@ struct SetupPanel: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 14) {
-                Text("Give any agent a Reagentr tool. It can add, list, complete, and reschedule your to-dos.")
-                    .font(.system(size: 12, weight: .medium))
+            VStack(alignment: .leading, spacing: 18) {
+                Text("Let an agent add, list, and check off your to-dos. Paste one of these into your terminal.")
+                    .font(.system(size: 12))
                     .foregroundStyle(.secondary)
-                Snippet(title: "Claude Code", source: "claude",
-                        code: "claude mcp add --scope user reagentr -- \"\(cli)\" mcp")
-                Snippet(title: "Codex", source: "codex",
-                        code: "codex mcp add reagentr -- \"\(cli)\" mcp")
-                Snippet(title: "Any MCP client (JSON)", source: "other",
-                        code: "{\n  \"mcpServers\": {\n    \"reagentr\": { \"command\": \"\(cli)\", \"args\": [\"mcp\"] }\n  }\n}")
-                Snippet(title: "Shell (no MCP)", source: "you",
-                        code: "ln -sf \"\(cli)\" ~/.local/bin/reagentr\nreagentr add \"Renew the domain\" --date 2026-11-03")
+                    .fixedSize(horizontal: false, vertical: true)
+                Snippet(title: "Claude Code", code: "claude mcp add --scope user reagentr -- \"\(cli)\" mcp")
+                Snippet(title: "Codex", code: "codex mcp add reagentr -- \"\(cli)\" mcp")
+                Snippet(title: "Other MCP clients",
+                        code: "{ \"mcpServers\": { \"reagentr\": {\n  \"command\": \"\(cli)\",\n  \"args\": [\"mcp\"] } } }")
+                Snippet(title: "Shell", code: "ln -sf \"\(cli)\" ~/.local/bin/reagentr")
             }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 16)
+            .padding(.horizontal, 18)
+            .padding(.top, 4)
+            .padding(.bottom, 18)
         }
         .scrollIndicators(.never)
     }
@@ -28,35 +27,41 @@ struct SetupPanel: View {
 
 private struct Snippet: View {
     let title: String
-    let source: String
     let code: String
     @State private var copied = 0
+    @State private var hovering = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            HStack(spacing: 6) {
-                SourceMark(source: source)
-                Text(title).font(.system(size: 13, weight: .semibold))
-                Spacer()
-                Button {
-                    NSPasteboard.general.clearContents()
-                    NSPasteboard.general.setString(code, forType: .string)
-                    copied += 1
-                } label: {
-                    Label(copied > 0 ? "Copied" : "Copy", systemImage: copied > 0 ? "checkmark" : "doc.on.doc")
-                        .font(.system(size: 11, weight: .semibold))
+            Text(title)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(.secondary)
+            Button {
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(code, forType: .string)
+                copied += 1
+            } label: {
+                HStack(alignment: .top, spacing: 8) {
+                    Text(code)
+                        .font(.system(size: 10.5, design: .monospaced))
+                        .foregroundStyle(.primary)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    Image(systemName: copied > 0 ? "checkmark" : "doc.on.doc")
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundStyle(copied > 0 ? .primary : .tertiary)
                         .contentTransition(.symbolEffect(.replace))
+                        .opacity(hovering || copied > 0 ? 1 : 0.6)
                 }
-                .buttonStyle(PressableStyle())
-                .foregroundStyle(copied > 0 ? Theme.done : Theme.accent)
-                .sensoryFeedback(.success, trigger: copied)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 8)
+                .background(.primary.opacity(hovering ? 0.07 : 0.045), in: .rect(cornerRadius: 8, style: .continuous))
+                .contentShape(.rect)
             }
-            Text(code)
-                .font(.system(size: 11, design: .monospaced))
-                .textSelection(.enabled)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(8)
-                .background(Color.primary.opacity(0.05), in: .rect(cornerRadius: 8, style: .continuous))
+            .buttonStyle(PressableStyle())
+            .onHover { hovering = $0 }
+            .sensoryFeedback(.success, trigger: copied)
+            .help("Copy")
         }
     }
 }

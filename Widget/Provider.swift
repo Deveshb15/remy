@@ -1,3 +1,4 @@
+import Foundation
 import ReagentrKit
 import WidgetKit
 
@@ -9,12 +10,12 @@ struct DayEntry: TimelineEntry {
     let calendar: Calendar
 
     func chip(_ t: Todo) -> String? { Schedule.chip(t, today: today, calendar: calendar) }
-    var nextUpcomingHuman: String? {
-        upcoming.first.map { Schedule.human(date: $0.date, time: nil, today: today, calendar: calendar) }
-    }
+    var nextUpcomingDay: Date? { upcoming.first?.date?.start(in: calendar) }
 }
 
 struct Provider: TimelineProvider {
+    var storeURL: URL? = Paths.storeURL
+
     func placeholder(in context: Context) -> DayEntry { .sample }
 
     func getSnapshot(in context: Context, completion: @escaping (DayEntry) -> Void) {
@@ -29,7 +30,7 @@ struct Provider: TimelineProvider {
     /// One entry per day boundary, so future to-dos appear at midnight without the app running.
     func entries(now: Date) -> [DayEntry] {
         let calendar = Calendar.autoupdatingCurrent
-        let todos = Paths.storeURL.flatMap { try? TodoStore(url: $0).load() } ?? []
+        let todos = storeURL.flatMap { try? TodoStore(url: $0).load() } ?? []
         return Schedule.timelineDates(todos, now: now, calendar: calendar).map { date in
             let day = LocalDate(date, calendar: calendar)
             return DayEntry(date: date, today: day, items: Schedule.visible(todos, on: day),

@@ -89,6 +89,26 @@ targets:
       - package: ReagentrKit
       - package: MCP
         product: MCP
+  # Dev-only: renders the popover and widget views to PNGs (`Snapshots <dir>`). Not shipped.
+  Snapshots:
+    type: tool
+    platform: macOS
+    sources:
+      - Snapshots
+      - App/AppController.swift
+      - App/NotificationReconciler.swift
+      - App/SocketServer.swift
+      - App/StoreWatcher.swift
+      - App/UI
+      - Widget/WidgetViews.swift
+      - Widget/Provider.swift
+      - Widget/ToggleTodoIntent.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.devesh.reagentr.snapshots
+        PRODUCT_MODULE_NAME: Snapshots
+    dependencies:
+      - package: ReagentrKit
 schemes:
   Reagentr:
     build:

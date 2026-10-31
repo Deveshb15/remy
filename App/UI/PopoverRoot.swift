@@ -8,82 +8,82 @@ struct PopoverRoot: View {
     @State private var showDone = false
 
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(alignment: .leading, spacing: 0) {
             header
             if showSetup {
                 SetupPanel()
                     .transition(.move(edge: .trailing).combined(with: .opacity))
             } else {
-                QuickAdd().padding(.horizontal, 16).padding(.bottom, 10)
+                QuickAdd()
+                    .padding(.horizontal, 8)
+                    .padding(.bottom, 6)
+                Divider().opacity(0.5).padding(.horizontal, 16)
                 ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 2) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        if let err = app.lastError { ErrorLine(text: err) }
                         todaySection
                         UpcomingList(todos: app.upcoming)
                         DoneList(todos: app.done, expanded: $showDone)
                     }
-                    .padding(.horizontal, 10)
-                    .padding(.bottom, 14)
+                    .padding(.horizontal, 8)
+                    .padding(.top, 6)
+                    .padding(.bottom, 12)
                 }
                 .scrollIndicators(.never)
+                .scrollBounceBehavior(.basedOnSize)
+                .frame(maxHeight: 440)
+                .fixedSize(horizontal: false, vertical: true) // popover hugs its content up to the cap
                 .transition(.move(edge: .leading).combined(with: .opacity))
             }
         }
-        .frame(width: 360)
-        .frame(minHeight: 300, maxHeight: 560)
-        .fontDesign(.rounded)
+        .frame(width: 340, alignment: .top)
         .animation(Theme.Motion.named(Theme.Motion.settle, reduceMotion: reduceMotion), value: showSetup)
     }
 
     private var header: some View {
-        HStack(alignment: .firstTextBaseline) {
-            VStack(alignment: .leading, spacing: 1) {
-                Text(showSetup ? "Connect agents" : "Today")
-                    .font(.system(size: 20, weight: .semibold))
-                    .tracking(-0.3)
-                    .contentTransition(.opacity)
-                Text(Date.now, format: .dateTime.weekday(.wide).month(.wide).day())
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(.secondary)
+        HStack(alignment: .firstTextBaseline, spacing: 6) {
+            Text(showSetup ? "Connect" : "Today")
+                .font(.system(size: 20, weight: .semibold))
+                .tracking(-0.4)
+                .contentTransition(.opacity)
+            if !showSetup, !app.visible.isEmpty {
+                Text(app.visible.count, format: .number)
+                    .font(.system(size: 20, weight: .medium))
+                    .tracking(-0.4)
+                    .foregroundStyle(.tertiary)
+                    .contentTransition(.numericText())
             }
             Spacer()
             Button {
                 showSetup.toggle()
             } label: {
-                Image(systemName: showSetup ? "xmark" : "bolt.horizontal.circle")
-                    .font(.system(size: 15, weight: .semibold))
+                Image(systemName: showSetup ? "xmark" : "ellipsis")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(.secondary)
                     .contentTransition(.symbolEffect(.replace))
-                    .frame(width: 28, height: 28)
+                    .frame(width: 26, height: 26)
+                    .contentShape(.circle)
             }
             .buttonStyle(PressableStyle())
-            .help(showSetup ? "Back to to-dos" : "Connect agents")
+            .help(showSetup ? "Back" : "Connect agents")
         }
-        .padding(.horizontal, 16)
-        .padding(.top, 14)
-        .padding(.bottom, 10)
+        .padding(.leading, 18)
+        .padding(.trailing, 12)
+        .padding(.top, 16)
+        .padding(.bottom, 8)
     }
 
     @ViewBuilder private var todaySection: some View {
         let items = app.visible
-        if let err = app.lastError {
-            Label(err, systemImage: "exclamationmark.triangle.fill")
-                .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(Theme.overdue)
-                .padding(.horizontal, 6).padding(.vertical, 6)
-        }
         if items.isEmpty {
-            AllClear(next: app.upcoming.first.flatMap { app.item($0)?.human })
+            AllClear()
                 .transition(.opacity)
         } else {
-            let overdue = items.filter { Schedule.bucket($0, on: app.today) == .overdue }
-            if !overdue.isEmpty {
-                SectionLabel(text: "Overdue", tint: Theme.overdue)
-            }
             ForEach(items) { todo in
                 TodoRow(todo: todo)
                     .transition(reduceMotion ? .opacity : .asymmetric(
-                        insertion: .scale(scale: 0.92, anchor: .top).combined(with: .opacity),
-                        removal: .scale(scale: 0.96).combined(with: .opacity).combined(with: .offset(y: -6))))
-                if todo.id == overdue.last?.id { SectionLabel(text: "Today", tint: .secondary).padding(.top, 6) }
+                        insertion: .move(edge: .top).combined(with: .opacity),
+                        removal: .opacity.combined(with: .scale(scale: 0.98, anchor: .leading))))
             }
         }
     }
@@ -91,15 +91,29 @@ struct PopoverRoot: View {
 
 struct SectionLabel: View {
     let text: String
-    var tint: Color = .secondary
+    var detail: String?
+
+    var body: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 5) {
+            Text(text).foregroundStyle(.secondary)
+            if let detail { Text(detail).foregroundStyle(.tertiary) }
+        }
+        .font(.system(size: 12, weight: .semibold))
+        .padding(.horizontal, 10)
+        .padding(.top, 16)
+        .padding(.bottom, 4)
+    }
+}
+
+private struct ErrorLine: View {
+    let text: String
 
     var body: some View {
         Text(text)
-            .font(.system(size: 13, weight: .semibold))
-            .foregroundStyle(tint)
-            .padding(.horizontal, 6)
-            .padding(.top, 10)
-            .padding(.bottom, 2)
+            .font(.system(size: 11, weight: .medium))
+            .foregroundStyle(Theme.overdue)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
     }
 }
 
@@ -109,31 +123,30 @@ struct PressableStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .contentShape(.rect)
-            .scaleEffect(configuration.isPressed && !reduceMotion ? 0.94 : 1)
+            .scaleEffect(configuration.isPressed && !reduceMotion ? 0.92 : 1)
+            .opacity(configuration.isPressed ? 0.7 : 1)
             .animation(Theme.Motion.named(Theme.Motion.press, reduceMotion: reduceMotion), value: configuration.isPressed)
     }
 }
 
-/// Empty state: the sun arrives with a single bounce (no looping motion).
+/// Quiet empty state: a single light glyph that settles in once.
 struct AllClear: View {
-    let next: String?
     @State private var arrived = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        VStack(spacing: 8) {
-            Image(systemName: "sun.max.fill")
-                .font(.system(size: 40, weight: .semibold))
-                .foregroundStyle(LinearGradient(colors: [Theme.marigold, Theme.accent], startPoint: .top, endPoint: .bottom))
-                .scaleEffect(arrived || reduceMotion ? 1 : 0.5)
-                .rotationEffect(.degrees(arrived || reduceMotion ? 0 : -40))
+        VStack(spacing: 6) {
+            Image(systemName: "checkmark.circle")
+                .font(.system(size: 26, weight: .light))
+                .foregroundStyle(.tertiary)
+                .scaleEffect(arrived || reduceMotion ? 1 : 0.85)
                 .opacity(arrived ? 1 : 0)
-            Text("All clear.").font(.system(size: 15, weight: .semibold))
-            Text(next.map { "Next up: \($0)." } ?? "Nothing due today. Ask an agent to add something.")
-                .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
+                .padding(.bottom, 4)
+            Text("All clear")
+                .font(.system(size: 14, weight: .semibold))
+            Text("Nothing due today.")
+                .font(.system(size: 12))
+                .foregroundStyle(.tertiary)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 28)
