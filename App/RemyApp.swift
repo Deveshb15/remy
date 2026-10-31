@@ -16,6 +16,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     func applicationDidFinishLaunching(_ note: Notification) {
         let controller = AppController.shared
         statusItem = StatusItemController(controller: controller)
+        _ = Updater.shared // starts scheduled update checks
         controller.start()
         UNUserNotificationCenter.current().delegate = self
         if SMAppService.mainApp.status == .notRegistered { try? SMAppService.mainApp.register() }
@@ -42,6 +43,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     }
 
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
-        await MainActor.run { statusItem?.show() }
+        let isUpdate = response.notification.request.identifier == Updater.notificationID
+        await MainActor.run { isUpdate ? Updater.shared.checkForUpdates() : statusItem?.show() }
     }
+
+    /// Target of the popover's "Check for Updates…" (sent up the responder chain, so the UI doesn't import Sparkle).
+    @objc func checkForUpdates(_ sender: Any?) { Updater.shared.checkForUpdates() }
 }

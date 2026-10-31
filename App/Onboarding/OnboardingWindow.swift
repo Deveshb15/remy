@@ -7,6 +7,7 @@ import SwiftUI
 final class OnboardingWindow: NSObject, NSWindowDelegate {
     static let shared = OnboardingWindow()
     private var window: NSWindow?
+    var isOpen: Bool { window != nil }
 
     func show(at step: OnboardingStep? = nil) {
         if let window {

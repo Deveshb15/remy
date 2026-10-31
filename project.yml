@@ -18,6 +18,9 @@ packages:
   MCP:
     url: https://github.com/modelcontextprotocol/swift-sdk.git
     exactVersion: 0.12.1
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    exactVersion: 2.10.1
 targets:
   Remy:
     type: application
@@ -40,6 +43,11 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSUIElement: true
+        # Sparkle: signed appcast on GitHub (see docs/releasing.md). The public key verifies every update.
+        SUFeedURL: https://raw.githubusercontent.com/Deveshb15/remy/main/appcast.xml
+        SUPublicEDKey: ABq6+n6u0vz9KvrTAflVCc52CkHD2cd4M9/of9RrDkI=
+        SUEnableAutomaticChecks: true
+        SUScheduledCheckInterval: 86400
         LSApplicationCategoryType: public.app-category.productivity
         RemyAppGroup: $(TeamIdentifierPrefix)dev.devesh.remy
         CFBundleURLTypes:
@@ -56,6 +64,7 @@ targets:
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     dependencies:
       - package: RemyKit
+      - package: Sparkle
       - target: RemyWidget
       - target: RemyCLI
         embed: true

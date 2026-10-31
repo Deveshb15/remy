@@ -61,7 +61,7 @@ Hairline checkboxes, quiet gray times, and a small mark showing which agent adde
   <img src="docs/screenshots/popover-dark.png" alt="Menu bar popover in dark mode" width="38%">
 </p>
 
-Click Remy's face in the menu bar to see today, upcoming days, and what's done. Type to add a to-do, and date options appear as you type. Right-click a to-do to reschedule or delete it. Checking one off gives a small spring, a ripple, and a line drawn through it. Click again within a moment to undo.
+Click Remy's face in the menu bar to see today, upcoming days, and what's done. Remy keeps itself up to date: it checks for updates once a day, or any time from **… → Check for Updates…**. Type to add a to-do, and date options appear as you type. Right-click a to-do to reschedule or delete it. Checking one off gives a small spring, a ripple, and a line drawn through it. Click again within a moment to undo.
 
 ## Install
 
@@ -125,6 +125,8 @@ REMY_NOTARY_PROFILE=<notarytool profile> ./scripts/make-dmg.sh   # + notarize an
 ```
 
 Signing uses `DEVELOPMENT_TEAM` in `project.yml`. If a **Developer ID Application** certificate for that team is in your keychain, the script builds a Developer ID release. It signs the app, widget, CLI, and the DMG itself. With a notary profile, it notarizes and staples the app and then the DMG. Without the certificate, it builds a development DMG that runs only on your own Mac.
+
+**Shipping updates:** Remy updates itself with [Sparkle](https://sparkle-project.org). To publish one, run `scripts/release.sh <version> <notes.md>`. It builds, notarizes, signs, publishes the GitHub release, and updates `appcast.xml`. The full process, and when to ship what, is in [docs/releasing.md](docs/releasing.md).
 
 To run the tests:
 

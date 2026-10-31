@@ -48,6 +48,7 @@ struct PopoverRoot: View {
             Menu {
                 Button("Connect Agents…") { OnboardingWindow.shared.show(at: .connect) }
                 Button("Add the Widget…") { OnboardingWindow.shared.show(at: .widget) }
+                Button("Check for Updates…") { NSApp.sendAction(Selector(("checkForUpdates:")), to: nil, from: nil) }
                 Divider()
                 Button("Quit Remy") { NSApp.terminate(nil) }
             } label: {

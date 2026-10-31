@@ -37,5 +37,13 @@
 	<true/>
 	<key>RemyAppGroup</key>
 	<string>$(TeamIdentifierPrefix)dev.devesh.remy</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUFeedURL</key>
+	<string>https://raw.githubusercontent.com/Deveshb15/remy/main/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>ABq6+n6u0vz9KvrTAflVCc52CkHD2cd4M9/of9RrDkI=</string>
+	<key>SUScheduledCheckInterval</key>
+	<integer>86400</integer>
 </dict>
 </plist>
