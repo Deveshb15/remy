@@ -28,6 +28,7 @@ struct WidgetBody: View {
 /// "Today 3" on the left, "Sat 31" on the right.
 private struct Header: View {
     let entry: DayEntry
+    static let dayLabel: DateFormatter = { let f = DateFormatter(); f.dateFormat = "EEE d"; return f }()
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 5) {
@@ -40,7 +41,7 @@ private struct Header: View {
                     .contentTransition(.numericText())
             }
             Spacer(minLength: 4)
-            Text(entry.date, format: .dateTime.weekday(.abbreviated).day())
+            Text(Self.dayLabel.string(from: entry.date))
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(.tertiary)
         }
@@ -50,20 +51,22 @@ private struct Header: View {
 struct TodoToggle: View {
     let todo: Todo
     var size: CGFloat = 15
+    var overdue = false
 
     var body: some View {
         Toggle(isOn: todo.isDone, intent: ToggleTodoIntent(id: todo.id)) { EmptyView() }
-            .toggleStyle(CheckToggleStyle(size: size))
+            .toggleStyle(CheckToggleStyle(size: size, overdue: overdue))
             .accessibilityLabel(todo.isDone ? "Mark \(todo.title) not done" : "Mark \(todo.title) done")
     }
 }
 
 struct CheckToggleStyle: ToggleStyle {
     let size: CGFloat
+    var overdue = false
 
     func makeBody(configuration: Configuration) -> some View {
         Button { configuration.isOn.toggle() } label: {
-            CheckGlyph(isOn: configuration.isOn, size: size)
+            CheckGlyph(isOn: configuration.isOn, size: size, overdue: overdue)
                 .padding(4) // hit target larger than the glyph
                 .contentShape(.rect)
         }
@@ -78,7 +81,7 @@ private struct Row: View {
 
     var body: some View {
         HStack(spacing: 6) {
-            TodoToggle(todo: todo)
+            TodoToggle(todo: todo, overdue: Schedule.bucket(todo, on: entry.today) == .overdue)
             Text(todo.title)
                 .font(.system(size: 12.5, weight: .regular))
                 .foregroundStyle(dimmed ? .secondary : .primary)

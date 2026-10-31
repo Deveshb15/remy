@@ -103,5 +103,18 @@ MainActor.assumeIsolated {
                    size: CGSize(width: 620, height: 560), dark: dark, name: "onboarding-\(step.rawValue)-\(step)")
         }
     }
+    // Checkbox legibility strip: light tile, dark tile, and a wallpaper (clear widget style, light content).
+    let states = HStack(spacing: 22) {
+        CheckGlyph(isOn: false, size: 34); CheckGlyph(isOn: false, size: 34, overdue: true); CheckGlyph(isOn: true, size: 34)
+        CheckGlyph(isOn: false, size: 16); CheckGlyph(isOn: true, size: 16)
+    }
+    let strip = HStack(spacing: 0) {
+        states.padding(28).frame(maxWidth: .infinity).background(Color.white).environment(\.colorScheme, .light)
+        states.padding(28).frame(maxWidth: .infinity).background(Color(white: 0.12)).environment(\.colorScheme, .dark)
+        states.padding(28).frame(maxWidth: .infinity)
+            .background(LinearGradient(colors: [Color(red: 0.13, green: 0.12, blue: 0.5), Color(red: 0.45, green: 0.12, blue: 0.4)], startPoint: .leading, endPoint: .trailing))
+            .environment(\.colorScheme, .dark)
+    }
+    render(strip, size: CGSize(width: 1020, height: 96), dark: false, name: "checks")
     print("Wrote snapshots to \(out.path)")
 }

@@ -28,28 +28,42 @@ enum Theme {
     }
 }
 
-/// Circular checkbox: hairline ring when open, solid label-colored disc with a knocked-out check when done.
+/// Circular checkbox (Todoist-style legibility): open = 1.5pt ring with a faint fill, red when overdue;
+/// done = solid disc with the check cut *out* of the shape, so it reads on any background,
+/// including the clear/tinted widget styles where a "background-coloured" check would vanish.
 struct CheckGlyph: View {
     let isOn: Bool
     var size: CGFloat = 16
+    var overdue = false
 
     var body: some View {
+        let ring: AnyShapeStyle = overdue ? AnyShapeStyle(Theme.overdue) : AnyShapeStyle(.secondary)
         ZStack {
             Circle()
-                .strokeBorder(.tertiary, lineWidth: 1.25)
+                .fill(overdue ? AnyShapeStyle(Theme.overdue.opacity(0.1)) : AnyShapeStyle(.primary.opacity(0.06)))
+                .overlay(Circle().strokeBorder(ring, lineWidth: 1.5))
                 .opacity(isOn ? 0 : 1)
-            Circle()
+            CheckDisc()
                 .fill(.primary)
                 .scaleEffect(isOn ? 1 : 0.3)
                 .opacity(isOn ? 1 : 0)
-            Image(systemName: "checkmark")
-                .font(.system(size: size * 0.5, weight: .bold))
-                .foregroundStyle(.background)
-                .scaleEffect(isOn ? 1 : 0.2)
-                .opacity(isOn ? 1 : 0)
         }
         .frame(width: size, height: size)
+        .widgetAccentable()
         .contentShape(.circle)
+    }
+}
+
+/// A filled circle with a rounded checkmark punched through it (true shape subtraction; no blend modes, so it works in widgets).
+struct CheckDisc: Shape {
+    func path(in r: CGRect) -> Path {
+        var tick = Path()
+        tick.move(to: CGPoint(x: r.minX + r.width * 0.29, y: r.minY + r.height * 0.52))
+        tick.addLine(to: CGPoint(x: r.minX + r.width * 0.44, y: r.minY + r.height * 0.67))
+        tick.addLine(to: CGPoint(x: r.minX + r.width * 0.72, y: r.minY + r.height * 0.37))
+        let cut = tick.strokedPath(StrokeStyle(lineWidth: r.width * 0.13, lineCap: .round, lineJoin: .round))
+        // Subtract (not even-odd): the stroke overlaps itself at the joint, which even-odd would turn into a notch.
+        return Path(Path(ellipseIn: r).cgPath.subtracting(cut.cgPath))
     }
 }
 

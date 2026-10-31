@@ -22,7 +22,7 @@ struct TodoRow: View {
         let still = reduceMotion // captured for Sendable animation closures
         return HStack(spacing: 9) {
             Button(action: toggle) {
-                CheckGlyph(isOn: isOn)
+                CheckGlyph(isOn: isOn, overdue: Schedule.bucket(todo, on: app.today) == .overdue)
                     .keyframeAnimator(initialValue: 1.0, trigger: ripple) { view, scale in
                         view.scaleEffect(still ? 1 : scale)
                     } keyframes: { _ in
