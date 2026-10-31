@@ -27,8 +27,14 @@ import Testing
     }
 
     @Test func sourceNames() {
-        #expect(CLI.sourceName(fromClient: "claude-code") == "Claude")
+        #expect(CLI.sourceName(fromClient: "claude-code") == "Claude Code")
+        #expect(CLI.sourceName(fromClient: "claude-ai") == "Claude")
         #expect(CLI.sourceName(fromClient: "codex-mcp-client") == "Codex")
-        #expect(CLI.sourceName(fromClient: "cursor") == "cursor")
+        #expect(CLI.sourceName(fromClient: "cursor-vscode") == "Cursor")
+        #expect(CLI.sourceName(fromClient: "Visual Studio Code") == "VS Code")
+        #expect(CLI.sourceName(fromClient: "gemini-cli-mcp-client") == "Gemini CLI")
+        #expect(CLI.sourceName(fromClient: "zed") == "zed")
+        #expect(Harness.matching(source: "Claude Code")?.id == "claude-code")
+        #expect(Harness.matching(source: "you") == nil)
     }
 }

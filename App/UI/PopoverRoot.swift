@@ -4,17 +4,12 @@ import SwiftUI
 struct PopoverRoot: View {
     @Environment(AppController.self) private var app
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var showSetup = false
     @State private var showDone = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             header
-            if showSetup {
-                SetupPanel()
-                    .transition(.move(edge: .trailing).combined(with: .opacity))
-            } else {
-                QuickAdd()
+            QuickAdd()
                     .padding(.horizontal, 8)
                     .padding(.bottom, 6)
                 Divider().opacity(0.5).padding(.horizontal, 16)
@@ -33,20 +28,16 @@ struct PopoverRoot: View {
                 .scrollBounceBehavior(.basedOnSize)
                 .frame(maxHeight: 440)
                 .fixedSize(horizontal: false, vertical: true) // popover hugs its content up to the cap
-                .transition(.move(edge: .leading).combined(with: .opacity))
-            }
         }
         .frame(width: 340, alignment: .top)
-        .animation(Theme.Motion.named(Theme.Motion.settle, reduceMotion: reduceMotion), value: showSetup)
     }
 
     private var header: some View {
         HStack(alignment: .firstTextBaseline, spacing: 6) {
-            Text(showSetup ? "Connect" : "Today")
+            Text("Today")
                 .font(.system(size: 20, weight: .semibold))
                 .tracking(-0.4)
-                .contentTransition(.opacity)
-            if !showSetup, !app.visible.isEmpty {
+            if !app.visible.isEmpty {
                 Text(app.visible.count, format: .number)
                     .font(.system(size: 20, weight: .medium))
                     .tracking(-0.4)
@@ -54,18 +45,23 @@ struct PopoverRoot: View {
                     .contentTransition(.numericText())
             }
             Spacer()
-            Button {
-                showSetup.toggle()
+            Menu {
+                Button("Connect Agents…") { OnboardingWindow.shared.show(at: .connect) }
+                Button("Add the Widget…") { OnboardingWindow.shared.show(at: .widget) }
+                Divider()
+                Button("Quit Remy") { NSApp.terminate(nil) }
             } label: {
-                Image(systemName: showSetup ? "xmark" : "ellipsis")
+                Image(systemName: "ellipsis")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(.secondary)
-                    .contentTransition(.symbolEffect(.replace))
                     .frame(width: 26, height: 26)
                     .contentShape(.circle)
             }
-            .buttonStyle(PressableStyle())
-            .help(showSetup ? "Back" : "Connect agents")
+            .menuStyle(.button)
+            .buttonStyle(.plain)
+            .menuIndicator(.hidden)
+            .fixedSize()
+            .help("More")
         }
         .padding(.leading, 18)
         .padding(.trailing, 12)

@@ -19,11 +19,22 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         controller.start()
         UNUserNotificationCenter.current().delegate = self
         if SMAppService.mainApp.status == .notRegistered { try? SMAppService.mainApp.register() }
+        if !OnboardingModel.isOnboarded || CommandLine.arguments.contains("--onboarding") || Installer.needsMove {
+            OnboardingWindow.shared.show()
+        }
+        if !Installer.needsMove { Task { await Installer.repairAll() } }
     }
 
     // remy://open from the widget.
+    // remy://open (widget click), remy://connect and remy://widget (jump into onboarding).
     func application(_ application: NSApplication, open urls: [URL]) {
-        if urls.contains(where: { $0.scheme == "remy" }) { statusItem?.show() }
+        for url in urls where url.scheme == "remy" {
+            switch url.host {
+            case "connect": OnboardingWindow.shared.show(at: .connect)
+            case "widget": OnboardingWindow.shared.show(at: .widget)
+            default: statusItem?.show()
+            }
+        }
     }
 
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {

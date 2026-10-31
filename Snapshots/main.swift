@@ -79,5 +79,29 @@ MainActor.assumeIsolated {
             }
         }
     }
+    // Onboarding: every step, with representative state.
+    let url = sampleStore(empty: false)
+    let app = AppController(storeURL: url)
+    app.reload()
+    for step in OnboardingStep.allCases {
+        let model = OnboardingModel(start: step)
+        model.detecting = false
+        model.selfTest = .passed
+        let pick = ["claude-code", "codex", "claude-desktop", "cursor", "gemini", "windsurf"]
+        model.rows = pick.compactMap { id in Harness.all.first { $0.id == id } }.enumerated().map { i, h in
+            var r = OnboardingModel.Row(harness: h)
+            r.status = i < 4 ? .connected : (i == 4 ? .idle : .manual("{}"))
+            if i == 0 && step == .connect { r.verified = "Try Remy" }
+            return r
+        }
+        if step == .tryIt { model.arrival = Todo(id: "x", title: "Try Remy", source: "Claude Code", createdAt: Date()) }
+        if step == .widget { model.widgetPlaced = true }
+        for dark in [false, true] {
+            render(OnboardingView(model: model, close: {}).environment(app)
+                    .background(Color(nsColor: .windowBackgroundColor))
+                    .environment(\.colorScheme, dark ? .dark : .light),
+                   size: CGSize(width: 620, height: 560), dark: dark, name: "onboarding-\(step.rawValue)-\(step)")
+        }
+    }
     print("Wrote snapshots to \(out.path)")
 }

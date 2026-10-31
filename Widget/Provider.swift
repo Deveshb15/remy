@@ -31,15 +31,17 @@ struct Provider: TimelineProvider {
     func entries(now: Date) -> [DayEntry] {
         let calendar = Calendar.autoupdatingCurrent
         let todos = storeURL.flatMap { try? TodoStore(url: $0).load() } ?? []
-        return Schedule.timelineDates(todos, now: now, calendar: calendar).map { date in
-            let day = LocalDate(date, calendar: calendar)
-            return DayEntry(date: date, today: day, items: Schedule.visible(todos, on: day),
-                            upcoming: Schedule.upcoming(todos, on: day), calendar: calendar)
-        }
+        return Schedule.timelineDates(todos, now: now, calendar: calendar).map { DayEntry(todos: todos, at: $0, calendar: calendar) }
     }
 }
 
 extension DayEntry {
+    init(todos: [Todo], at date: Date, calendar: Calendar) {
+        let day = LocalDate(date, calendar: calendar)
+        self.init(date: date, today: day, items: Schedule.visible(todos, on: day),
+                  upcoming: Schedule.upcoming(todos, on: day), calendar: calendar)
+    }
+
     static var sample: DayEntry {
         let cal = Calendar.autoupdatingCurrent
         let today = LocalDate(Date(), calendar: cal)

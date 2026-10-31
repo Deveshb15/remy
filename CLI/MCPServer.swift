@@ -14,16 +14,16 @@ enum MCPServer {
         await server.withMethodHandler(CallTool.self) { params in
             let source = await client.value
             guard let req = request(for: params.name, args: params.arguments ?? [:], source: source) else {
-                return .init(content: [.text("Unknown tool \(params.name).")], isError: true)
+                return .init(content: [.text(text: "Unknown tool \(params.name).", annotations: nil, _meta: nil)], isError: true)
             }
             do {
                 let response = try await AppClient.send(req)
                 let json = try Wire.encode(response)
-                return .init(content: [.text(CLI.render(response, for: req.op))],
+                return .init(content: [.text(text: CLI.render(response, for: req.op), annotations: nil, _meta: nil)],
                              structuredContent: try? JSONDecoder().decode(Value.self, from: json),
                              isError: !response.ok)
             } catch {
-                return .init(content: [.text("Remy is unavailable: \(error.localizedDescription)")], isError: true)
+                return .init(content: [.text(text: "Remy is unavailable: \(error.localizedDescription)", annotations: nil, _meta: nil)], isError: true)
             }
         }
 

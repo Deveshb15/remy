@@ -107,8 +107,7 @@ public enum CLI {
     /// Badge name from an MCP client's self-reported name.
     public static func sourceName(fromClient name: String) -> String {
         let n = name.lowercased()
-        if n.contains("claude") { return "Claude" }
-        if n.contains("codex") { return "Codex" }
-        return String(name.prefix(40))
+        // Harness order puts "claude-code" before plain "claude" (Claude desktop sends "claude-ai").
+        return Harness.all.first { h in h.keywords.contains { n.contains($0) } }?.name ?? String(name.prefix(40))
     }
 }

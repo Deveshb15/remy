@@ -7,23 +7,15 @@ enum Theme {
 
     /// Agent glyphs, drawn in the same tertiary gray as the rest of the metadata.
     static func symbol(for source: String) -> String? {
-        switch source.lowercased() {
-        case "you": nil
-        case "claude": "sparkle"
-        case "codex": "chevron.left.forwardslash.chevron.right"
-        case "cli": "terminal"
-        default: "circle.hexagongrid"
-        }
+        let s = source.lowercased()
+        if s == "you" { return nil }
+        if s.contains("claude") { return "sparkle" }
+        if s.contains("codex") { return "chevron.left.forwardslash.chevron.right" }
+        if s == "cli" { return "terminal" }
+        return "circle.hexagongrid"
     }
 
-    static func label(for source: String) -> String {
-        switch source.lowercased() {
-        case "claude": "Claude"
-        case "codex": "Codex"
-        case "you": "you"
-        default: source
-        }
-    }
+    static func label(for source: String) -> String { source }
 
     enum Motion {
         static let press = Animation.spring(response: 0.22, dampingFraction: 0.65)

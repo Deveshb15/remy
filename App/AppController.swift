@@ -27,7 +27,7 @@ final class AppController {
     func start() {
         guard let handler else { return }
         reload()
-        notifications.requestAuthorization()
+        if OnboardingModel.isOnboarded { notifications.requestAuthorization() }
         notifications.reconcile(todos)
         watcher = StoreWatcher(url: handler.store.url) { [weak self] in self?.storeChangedExternally() }
         do {
@@ -57,6 +57,9 @@ final class AppController {
     }
 
     func item(_ t: Todo) -> Item? { handler?.item(t, today) }
+
+    /// Asked at the end of onboarding, in context, rather than on first launch.
+    func requestNotifications() { notifications.requestAuthorization() }
 
     var visible: [Todo] { Schedule.visible(todos, on: today) }
     var upcoming: [Todo] { Schedule.upcoming(todos, on: today) }
