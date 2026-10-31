@@ -72,7 +72,10 @@ enum Installer {
             guard let exe = Harness.locate(binary, in: await searchPaths()) else { return .failed("\(binary) not found") }
             _ = await run(exe, remove, timeout: 20) // idempotent: replace any earlier entry
             let r = await run(exe, add + [helperPath, "mcp"], timeout: 30)
-            return r.status == 0 ? .connected : .failed(r.output.split(separator: "\n").last.map(String.init) ?? "exit \(r.status)")
+            // The harness's own config is the source of truth; its exit code and chatter are not.
+            if registeredHelper(h) == helperPath { return .connected }
+            let reason = r.status == -1 ? "\(binary) took too long to respond" : "\(binary) couldn\u{2019}t add Remy (exit \(r.status))"
+            return .failed(reason)
         }
     }
 
@@ -174,12 +177,16 @@ enum Installer {
                 do { try p.run() } catch { cont.resume(returning: RunResult(status: -1, output: error.localizedDescription)); return }
                 if let stdin { inPipe.fileHandleForWriting.write(Data(stdin.utf8)) }
                 if until == nil { try? inPipe.fileHandleForWriting.close() }
-                p.terminationHandler = { _ in done.signal() }
+                let deadline = Date().addingTimeInterval(timeout)
                 _ = done.wait(timeout: .now() + timeout)
-                if p.isRunning { p.terminate() }
+                // Output EOF (or the `until` match) can arrive before the process has exited. Wait for the real exit
+                // until the deadline; only a genuine timeout (or a stream we chose to stop early) gets terminated.
+                if until == nil { while p.isRunning && Date() < deadline { usleep(20_000) } }
+                let timedOut = p.isRunning
+                if timedOut { p.terminate(); p.waitUntilExit() }
                 out.fileHandleForReading.readabilityHandler = nil
                 let text = buffer.append(Data())
-                cont.resume(returning: RunResult(status: p.isRunning ? -1 : p.terminationStatus, output: text))
+                cont.resume(returning: RunResult(status: timedOut && until == nil ? -1 : p.terminationStatus, output: text))
             }
         }
     }
