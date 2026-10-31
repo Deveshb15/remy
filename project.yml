@@ -6,7 +6,7 @@ options:
   createIntermediateGroups: true
 settings:
   base:
-    DEVELOPMENT_TEAM: J84CXH5N6L
+    DEVELOPMENT_TEAM: 728M4WMSGG
     CODE_SIGN_STYLE: Automatic
     SWIFT_VERSION: "6.0"
     ENABLE_HARDENED_RUNTIME: YES
@@ -95,6 +95,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: dev.devesh.remy.cli
         PRODUCT_NAME: remy
         PRODUCT_MODULE_NAME: RemyCLI
+        SKIP_INSTALL: YES # ships only inside Remy.app; installing it separately makes the archive "generic" (not exportable)
     dependencies:
       - package: RemyKit
       - package: MCP
